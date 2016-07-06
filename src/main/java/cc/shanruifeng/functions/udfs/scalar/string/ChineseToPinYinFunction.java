@@ -5,6 +5,8 @@ import com.facebook.presto.operator.scalar.ScalarFunction;
 import com.facebook.presto.spi.type.StandardTypes;
 import com.facebook.presto.type.SqlType;
 import io.airlift.slice.Slice;
+import io.airlift.slice.SliceUtf8;
+import io.airlift.slice.Slices;
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
@@ -22,7 +24,7 @@ public class ChineseToPinYinFunction {
     @ScalarFunction("convertToPinYin")
     @Description("Convert chinese han zi to pinyin.")
     @SqlType(StandardTypes.VARCHAR)
-    public static String convertToPinYin(@SqlType(StandardTypes.VARCHAR) Slice string) {
+    public static Slice convertToPinYin(@SqlType(StandardTypes.VARCHAR) Slice string) {
         if (string == null) {
             return null;
         }
@@ -35,11 +37,9 @@ public class ChineseToPinYinFunction {
         String result = null;
         try {
             result = PinyinHelper.toHanyuPinyinString(string.toStringUtf8(), pyFormat, "");
+            return Slices.utf8Slice(result);
         } catch (BadHanyuPinyinOutputFormatCombination e) {
             return null;
         }
-
-        return result;
-
     }
 }
