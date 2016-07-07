@@ -22,19 +22,17 @@ public class DayOfWeekFunction {
     @ScalarFunction("dayOfWeek")
     @Description("Returns the day of week from a date string")
     @SqlType(StandardTypes.INTEGER)
-    public static Integer dayOfWeek(@SqlType(StandardTypes.VARCHAR) Slice string)
+    public static long dayOfWeek(@SqlType(StandardTypes.VARCHAR) Slice string)
     {
         if (string == null) {
-            return null;
+            return -1;
         }
 
         try {
             LocalDate date = LocalDate.parse(string.toStringUtf8(), DEFAULT_DATE_FORMATTER);
             return date.getDayOfWeek();
         } catch (Exception e) {
-
+            return -1;
         }
-
-        return null;
     }
 }
