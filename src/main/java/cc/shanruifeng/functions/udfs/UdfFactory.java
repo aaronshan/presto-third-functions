@@ -8,7 +8,7 @@ import com.facebook.presto.operator.aggregation.AggregationFunction;
 import com.facebook.presto.operator.window.WindowFunction;
 import com.facebook.presto.spi.type.TypeManager;
 import com.google.common.collect.ImmutableList;
-import io.airlift.log.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -24,7 +24,7 @@ import java.util.zip.ZipInputStream;
  * @time 18:42
  */
 public class UdfFactory implements FunctionFactory {
-    private static final Logger log = Logger.get(UdfFactory.class);
+    private static org.slf4j.Logger logger = LoggerFactory.getLogger(UdfFactory.class);
     private final TypeManager typeManager;
 
     public UdfFactory(TypeManager tm) {
@@ -46,14 +46,14 @@ public class UdfFactory implements FunctionFactory {
 
     private void addFunctions(FunctionListBuilder builder, List<Class<?>> classes) {
         for (Class<?> clazz : classes) {
-            log.info("Adding: " + clazz);
+            logger.info("Adding: " + clazz);
             if (SqlAggregationFunction.class.isAssignableFrom(clazz)) {
                 try {
                     builder.function((SqlAggregationFunction) clazz.newInstance());
                 } catch (InstantiationException e) {
-                    log.info(String.format("Could not add %s, exception: %s, stack: %s", clazz.getName(), e, e.getStackTrace()));
+                    logger.info(String.format("Could not add %s, exception: %s, stack: %s", clazz.getName(), e, e.getStackTrace()));
                 } catch (IllegalAccessException e) {
-                    log.info(String.format("Could not add %s, exception: %s, stack: %s", clazz.getName(), e, e.getStackTrace()));
+                    logger.info(String.format("Could not add %s, exception: %s, stack: %s", clazz.getName(), e, e.getStackTrace()));
                 }
             } else {
                 if (clazz.getName().startsWith("cc.shanruifeng.functions.udfs.scalar")) {
@@ -63,7 +63,7 @@ public class UdfFactory implements FunctionFactory {
                         if (e.getCause() instanceof IllegalAccessException) {
                             // This is alright, must be helper classes
                         } else {
-                            log.info(String.format("Could not add %s, exception: %s, stack: %s", clazz.getName(), e, e.getStackTrace()));
+                            logger.info(String.format("Could not add %s, exception: %s, stack: %s", clazz.getName(), e, e.getStackTrace()));
                         }
                     }
                 } else if (clazz.getName().startsWith("cc.shanruifeng.functions.udfs.aggregation")) {
@@ -74,7 +74,7 @@ public class UdfFactory implements FunctionFactory {
                     try {
                         builder.aggregate(clazz);
                     } catch (Exception e) {
-                        log.info(String.format("Could not add %s, exception: %s, stack: %s", clazz.getName(), e, e.getStackTrace()));
+                        logger.info(String.format("Could not add %s, exception: %s, stack: %s", clazz.getName(), e, e.getStackTrace()));
                     }
                 } else if (clazz.getName().startsWith("cc.shanruifeng.functions.udfs.window")) {
                     if (WindowFunctionDefinition.class.isAssignableFrom(clazz)) {
@@ -82,9 +82,9 @@ public class UdfFactory implements FunctionFactory {
                             WindowFunctionDefinition def = (WindowFunctionDefinition) clazz.newInstance();
                             builder.window(def.getName(), def.getReturnType(), def.getArgumentTypes(), (Class<? extends WindowFunction>) clazz);
                         } catch (InstantiationException e) {
-                            log.info(String.format("Could not add %s, exception: %s, stack: %s", clazz.getName(), e, e.getStackTrace()));
+                            logger.info(String.format("Could not add %s, exception: %s, stack: %s", clazz.getName(), e, e.getStackTrace()));
                         } catch (IllegalAccessException e) {
-                            log.info(String.format("Could not add %s, exception: %s, stack: %s", clazz.getName(), e, e.getStackTrace()));
+                            logger.info(String.format("Could not add %s, exception: %s, stack: %s", clazz.getName(), e, e.getStackTrace()));
                         }
                     }
 

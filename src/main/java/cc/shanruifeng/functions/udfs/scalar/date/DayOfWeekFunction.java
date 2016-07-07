@@ -9,6 +9,8 @@ import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.util.Calendar;
+
 
 /**
  * @author ruifeng.shan
@@ -22,14 +24,27 @@ public class DayOfWeekFunction {
     @ScalarFunction("dayOfWeek")
     @Description("Returns the day of week from a date string")
     @SqlType(StandardTypes.INTEGER)
-    public static long dayOfWeek(@SqlType(StandardTypes.VARCHAR) Slice string)
-    {
+    public static long dayOfWeek(@SqlType(StandardTypes.VARCHAR) Slice string) {
         if (string == null) {
             return -1;
         }
 
         try {
             LocalDate date = LocalDate.parse(string.toStringUtf8(), DEFAULT_DATE_FORMATTER);
+            return date.getDayOfWeek();
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
+    @ScalarFunction("dayOfWeek")
+    @Description("Returns the day of week from a date string")
+    @SqlType(StandardTypes.INTEGER)
+    public static long dayOfWeek(@SqlType(StandardTypes.DATE) long t) {
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(t);
+            LocalDate date = LocalDate.fromCalendarFields(calendar);
             return date.getDayOfWeek();
         } catch (Exception e) {
             return -1;

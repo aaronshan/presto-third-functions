@@ -18,8 +18,9 @@ import java.util.Calendar;
  * @time 16:13
  */
 public class ZodiacSignFunction {
-    private enum language {CN, EN};
     public final static DateTimeFormatter DEFAULT_DATE_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd");
+
+    ;
     private static final String[] zodiacCnArray = {"魔羯座", "水瓶座", "双鱼座", "白羊座", "金牛座", "双子座", "巨蟹座", "狮子座", "处女座", "天秤座", "天蝎座", "射手座"};
     private static final String[] zodiacEnArray = {"Capricorn", "Aquarius", "Pisces", "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius"};
 
@@ -104,4 +105,6 @@ public class ZodiacSignFunction {
         }
 
     }
+
+    private enum language {CN, EN}
 }

@@ -45,7 +45,7 @@ Query 20160707_073523_00005_iya2r, FINISHED, 1 node
 Splits: 1 total, 0 done (0.00%)
 0:00 [0 rows, 0B] [0 rows/s, 0B/s]
 
-presto:default> select converttopinyin(country) from (values '中国') as t(country);
+presto:default> select pinyin(country) from (values '中国') as t(country);
   _col0
 ----------
  zhongguo
