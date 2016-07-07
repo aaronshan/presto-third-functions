@@ -29,7 +29,7 @@ cd /home/presto/
 ln -s presto-client-0.147/presto-cli-0.147-executable.jar presto-cli
 export JAVA_HOME=/home/java8/jdk1.8.0_91/;
 export PATH=/home/java8/jdk1.8.0_91/bin/:$PATH;
-alias presto="/home/q/presto/presto-cli --server localhost:8080 --catalog hive --schema default"
+alias presto="/home/presto/presto-cli --server localhost:8080 --catalog hive --schema default"
 ```
 
 ### 3. example
