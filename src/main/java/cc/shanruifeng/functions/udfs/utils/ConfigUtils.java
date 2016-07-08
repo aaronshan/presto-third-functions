@@ -1,6 +1,7 @@
 package cc.shanruifeng.functions.udfs.utils;
 
 import cc.shanruifeng.functions.udfs.model.ChinaIdArea;
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.io.Closer;
@@ -25,7 +26,6 @@ public class ConfigUtils {
 
     public static List<String> loadFile(String fileName) throws IOException {
         ArrayList<String> strings = Lists.newArrayList();
-
         Closer closer = Closer.create();
         try {
             InputStream inputStream = ConfigUtils.class.getResourceAsStream(fileName);
@@ -33,11 +33,14 @@ public class ConfigUtils {
             closer.register(bufferedReader);
             String line;
             while ((line = bufferedReader.readLine()) != null) {
+                if (Strings.isNullOrEmpty(line) || line.startsWith("#")) {
+                    continue;
+                }
                 strings.add(line);
             }
-        } catch (Throwable t) {
-            logger.error("loadFile {} error. error is {}.", fileName, t);
-            throw closer.rethrow(t);
+        } catch (IOException e) {
+            logger.error("loadFile {} error. error is {}.", fileName, e);
+            throw e;
         } finally {
             closer.close();
         }
