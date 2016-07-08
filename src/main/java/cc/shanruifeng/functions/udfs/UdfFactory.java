@@ -8,6 +8,7 @@ import com.facebook.presto.operator.aggregation.AggregationFunction;
 import com.facebook.presto.operator.window.WindowFunction;
 import com.facebook.presto.spi.type.TypeManager;
 import com.google.common.collect.ImmutableList;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
@@ -24,7 +25,7 @@ import java.util.zip.ZipInputStream;
  * @time 18:42
  */
 public class UdfFactory implements FunctionFactory {
-    private static org.slf4j.Logger logger = LoggerFactory.getLogger(UdfFactory.class);
+    private static Logger logger = LoggerFactory.getLogger(UdfFactory.class);
     private final TypeManager typeManager;
 
     public UdfFactory(TypeManager tm) {

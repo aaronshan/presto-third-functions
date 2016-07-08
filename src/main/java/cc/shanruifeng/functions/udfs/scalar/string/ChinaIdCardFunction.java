@@ -32,7 +32,7 @@ public class ChinaIdCardFunction {
         String cardString = card.toStringUtf8();
         int cardLength = cardString.length();
         //身份证只有15位或18位
-        if (cardLength != 15 || cardLength != 18) {
+        if (cardLength != 15 && cardLength != 18) {
             return null;
         }
 
