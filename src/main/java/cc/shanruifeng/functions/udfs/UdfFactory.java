@@ -111,10 +111,10 @@ public class UdfFactory implements FunctionFactory {
                 String className = entry.getName().replace("/", "."); // This still has .class at the end
                 className = className.substring(0, className.length() - 6); // remvove .class from end
                 try {
+                    logger.info("#####className={}", className);
                     classes.add(Class.forName(className));
                 } catch (ClassNotFoundException e) {
-                    System.out.println(String.format("Could not load class %s, Exception: %s", className, e));
-                    //TODO: add log
+                    logger.error("Could not load class {}, Exception: {}", className, e);
                 }
             }
         }
