@@ -18,7 +18,7 @@ import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombi
  * @date 2016-07-06
  * @time 18:26
  */
-public class ChineseToPinYinFunction {
+public class ChineseToPinYinFunctions {
 
     @ScalarFunction("pinyin")
     @Description("Convert chinese to pinyin.")

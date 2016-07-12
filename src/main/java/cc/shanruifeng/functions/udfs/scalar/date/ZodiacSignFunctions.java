@@ -12,12 +12,14 @@ import org.joda.time.format.DateTimeFormatter;
 
 import java.util.Calendar;
 
+import static java.util.concurrent.TimeUnit.DAYS;
+
 /**
  * @author ruifeng.shan
  * @date 2016-07-07
  * @time 16:13
  */
-public class ZodiacSignFunction {
+public class ZodiacSignFunctions {
     public final static DateTimeFormatter DEFAULT_DATE_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd");
 
     ;
@@ -47,7 +49,7 @@ public class ZodiacSignFunction {
     public static Slice getZodiacSignCn(@SqlType(StandardTypes.DATE) long t) {
         try {
             Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(t);
+            calendar.setTimeInMillis(DAYS.toMillis(t));
             LocalDate date = LocalDate.fromCalendarFields(calendar);
             String zodiac = getZodiac(date.getMonthOfYear(), date.getDayOfMonth(), language.CN);
             return Slices.utf8Slice(zodiac);
@@ -79,7 +81,7 @@ public class ZodiacSignFunction {
     public static Slice getZodiacSignEn(@SqlType(StandardTypes.DATE) long t) {
         try {
             Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(t);
+            calendar.setTimeInMillis(DAYS.toMillis(t));
             LocalDate date = LocalDate.fromCalendarFields(calendar);
             String zodiac = getZodiac(date.getMonthOfYear(), date.getDayOfMonth(), language.EN);
             return Slices.utf8Slice(zodiac);
@@ -98,7 +100,7 @@ public class ZodiacSignFunction {
             index = 0;
         }
         // return index's zodiac string
-        if (language == ZodiacSignFunction.language.CN) {
+        if (language == ZodiacSignFunctions.language.CN) {
             return zodiacCnArray[index];
         } else {
             return zodiacEnArray[index];

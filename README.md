@@ -11,7 +11,7 @@ cd ${project_home}
 mvn clean package
 ```
 
-执行完命令后,将会生成在target目录下presto-third-functions-1.0-SNAPSHOT-shaded.jar`文件.
+执行完命令后,将会生成在target目录下presto-third-functions-0.1.0-shaded.jar`文件.
 
 ## 函数
 | 函数| 说明|
@@ -26,22 +26,25 @@ mvn clean package
 |id_card_birthday(string) -> string |由身份证号获取出生日期|
 |id_card_gender(string) -> string |由身份证号获取性别|
 |is_valid_id_card(string) -> boolean |鉴别是否是有效的身份证号|
+|id_card_info(string) -> json |获取身份证号对应的信息,包括省份,城市,区县,性别及是否有效|
 |wgs_distance(double lat1, double lng1, double lat2, double lng2) -> double |计算WGS84坐标系下的坐标距离,单位为米|
 |gcj_to_bd(double,double) -> json |火星坐标系(GCJ-02)转百度坐标系(BD-09),谷歌、高德——>百度|
 |bd_to_gcj(double,double) -> json |百度坐标系(BD-09)转火星坐标系(GCJ-02),百度——>谷歌、高德|
 |wgs_to_gcj(double,double) -> json |WGS84转GCJ02(火星坐标系)|
 |gcj_to_wgs(double,double) -> json |GCJ02(火星坐标系)转GPS84,输出的WGS-84坐标精度为1米到2米之间。|
 |gcj_extract_wgs(double,double) -> json |GCJ02(火星坐标系)转GPS84,输出的WGS-84坐标精度为0.5米内。但是计算速度慢于gcj_to_wgs|
+|md5(string) -> string |对字符串求md5值|
+|sha256(string) -> string |对字符串求sha256值|
 
 > 关于互联网地图坐标系的说明见: [当前互联网地图的坐标系现状](https://github.com/aaronshan/presto-third-functions/tree/master/src/main/java/cc/shanruifeng/functions/udfs/scalar/geographic/README-geo.md)
 
 
 ## 用法
 
-把presto-third-functions-1.0-SNAPSHOT-shaded.jar放到 `${presto_home}/plugin/hive-hadoop2` 目录下并重启presto.下面是示例:
+把presto-third-functions-0.1.0-shaded.jar放到 `${presto_home}/plugin/hive-hadoop2` 目录下并重启presto.下面是示例:
 ### 1. 重启presto
 ```
-mv presto-third-functions-1.0-SNAPSHOT-shaded.jar /home/presto/presto-server-0.147/plugin/hive-hadoop2/
+mv presto-third-functions-0.1.0-shaded.jar /home/presto/presto-server-0.147/plugin/hive-hadoop2/
 cd /home/presto/presto-server-0.147
 bin/launcher restart
 ```
@@ -78,7 +81,7 @@ Query 20160707_073649_00006_iya2r, FINISHED, 1 node
 Splits: 1 total, 0 done (0.00%)
 0:00 [0 rows, 0B] [0 rows/s, 0B/s]
 
-presto:default> select gcj_to_bd(lat,lng), bd_to_gcj(lat,lng), wgs_to_gcj(lat,lng), gcj_to_wgs(lat,lng), gcj_extract_wgs(lat,lng) from (values (39.915, 116.404)) as t(lat, lng)\G
+presto:default> select gcj_to_bd(lat,lng), bd_to_gcj(lat,lng), wgs_to_gcj(lat,lng), gcj_to_wgs(lat,lng), gcj_extract_wgs(lat,lng) from (values (39.915, 116.404)) as t(lat, lng)\G;
 -[ RECORD 1 ]----------------------------------------------
 _col0 | {"lng":116.41036949371029,"lat":39.92133699351022}
 _col1 | {"lng":116.39762729119315,"lat":39.90865673957631}
@@ -90,4 +93,22 @@ Query 20160712_024714_00003_9rund, FINISHED, 1 node
 Splits: 1 total, 0 done (0.00%)
 0:00 [0 rows, 0B] [0 rows/s, 0B/s]
 
+presto:default> select id_card_info(card) from (values '110101198901084517') as t(card);
+                                      _col0
+----------------------------------------------------------------------------------
+ {"area":"东城区","valid":true,"province":"北京市","gender":"男","city":"北京市"}
+(1 row)
+
+Query 20160712_071700_00004_hkbes, FINISHED, 1 node
+Splits: 1 total, 0 done (0.00%)
+0:00 [0 rows, 0B] [0 rows/s, 0B/s]
+
+presto:default> select md5(col1), sha256(col1) from (values 'aaronshan') as t(col1)\G;
+-[ RECORD 1 ]-----------------------------------------------------------
+_col0 | 95686bc0483262afe170b550dd4544d1
+_col1 | d16bb375433ad383169f911afdf45e209eabfcf047ba1faebdd8f6a0b39e0a32
+
+Query 20160712_071936_00006_hkbes, FINISHED, 1 node
+Splits: 1 total, 0 done (0.00%)
+0:00 [0 rows, 0B] [0 rows/s, 0B/s]
 ```

@@ -19,7 +19,7 @@ import static java.util.concurrent.TimeUnit.DAYS;
  * @date 2016-07-06
  * @time 17:40
  */
-public class DayOfWeekFunction {
+public class DayOfWeekFunctions {
     public final static DateTimeFormatter DEFAULT_DATE_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd");
 
     @ScalarFunction("dayOfWeek")

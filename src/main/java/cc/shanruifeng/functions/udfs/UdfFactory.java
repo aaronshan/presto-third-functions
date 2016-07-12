@@ -38,7 +38,7 @@ public class UdfFactory implements FunctionFactory {
             List<Class<?>> classes = getFunctionClasses();
             addFunctions(builder, classes);
         } catch (IOException e) {
-            System.out.println("Could not load classes from jar file: " + e);
+            logger.error("Could not load classes from jar file: {} ", e);
             return ImmutableList.of();
         }
 
@@ -111,7 +111,6 @@ public class UdfFactory implements FunctionFactory {
                 String className = entry.getName().replace("/", "."); // This still has .class at the end
                 className = className.substring(0, className.length() - 6); // remvove .class from end
                 try {
-                    logger.info("#####className={}", className);
                     classes.add(Class.forName(className));
                 } catch (ClassNotFoundException e) {
                     logger.error("Could not load class {}, Exception: {}", className, e);

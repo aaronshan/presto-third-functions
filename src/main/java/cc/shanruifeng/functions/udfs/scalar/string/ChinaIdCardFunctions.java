@@ -6,7 +6,10 @@ import com.facebook.presto.operator.Description;
 import com.facebook.presto.operator.scalar.ScalarFunction;
 import com.facebook.presto.spi.type.StandardTypes;
 import com.facebook.presto.type.SqlType;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
+import com.google.common.collect.Maps;
 import io.airlift.slice.Slice;
 import io.airlift.slice.Slices;
 
@@ -19,7 +22,7 @@ import java.util.Map;
  * @date 2016-07-07
  * @time 18:28
  */
-public class ChinaIdCardFunction {
+public class ChinaIdCardFunctions {
     private static final Map<String, ChinaIdArea> chinaIdAreaMap = ConfigUtils.getIdCardMap();
     private static int[] weight = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};    //十七位数字本体码权重
     private static char[] validate = {'1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'};    //mod11,对应校验码字符值
@@ -172,5 +175,31 @@ public class ChinaIdCardFunction {
         }
         mode = sum % 11;
         return validate[mode];
+    }
+
+    @ScalarFunction("id_card_info")
+    @Description("get china id card info.")
+    @SqlType(StandardTypes.JSON)
+    public static Slice getJsonOfChinaIdCard(@SqlType(StandardTypes.VARCHAR) Slice card) {
+        try {
+            Map<String, Object> map = Maps.newHashMap();
+            ChinaIdArea chinaIdArea = getCardValue(card);
+            if (chinaIdArea == null) {
+                map.put("province", null);
+                map.put("city", null);
+                map.put("area", null);
+            } else {
+                map.put("province", chinaIdArea.getProvince());
+                map.put("city", chinaIdArea.getCity());
+                map.put("area", chinaIdArea.getArea());
+            }
+
+            map.put("gender", getIdCardGender(card).toStringUtf8());
+            map.put("valid", isValidIdCard(card));
+            ObjectMapper mapper = new ObjectMapper();
+            return Slices.utf8Slice(mapper.writeValueAsString(map));
+        } catch (JsonProcessingException e) {
+            return null;
+        }
     }
 }
