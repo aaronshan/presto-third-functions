@@ -39,8 +39,8 @@ public class GeographicFunctions {
     @ScalarFunction("gcj_to_bd")
     @Description("Convert GCJ-02 to BD-09.")
     @SqlType(StandardTypes.JSON)
-    public static Slice GCJ02ToBD09(@SqlType(StandardTypes.DOUBLE) double gcgLat, @SqlType(StandardTypes.DOUBLE) double gcgLng) {
-        double x = gcgLng, y = gcgLat;
+    public static Slice GCJ02ToBD09(@SqlType(StandardTypes.DOUBLE) double gcjLat, @SqlType(StandardTypes.DOUBLE) double gcjLng) {
+        double x = gcjLng, y = gcjLat;
         double z = Math.sqrt(x * x + y * y) + 0.00002 * Math.sin(y * xPi);
         double theta = Math.atan2(y, x) + 0.000003 * Math.cos(x * xPi);
         double bdLng = z * Math.cos(theta) + 0.0065;
@@ -58,44 +58,106 @@ public class GeographicFunctions {
         double x = bdLng - 0.0065, y = bdLat - 0.006;
         double z = Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * xPi);
         double theta = Math.atan2(y, x) - 0.000003 * Math.cos(x * xPi);
-        double gcgLng = z * Math.cos(theta);
-        double gcgLat = z * Math.sin(theta);
+        double gcjLng = z * Math.cos(theta);
+        double gcjLat = z * Math.sin(theta);
 
-        return Slices.utf8Slice(getJsonOfCoordinate(gcgLat, gcgLng));
+        return Slices.utf8Slice(getJsonOfCoordinate(gcjLat, gcjLng));
     }
 
     // WGS84转GCJ02(火星坐标系)
     @ScalarFunction("wgs_to_gcj")
     @Description("Convert WGS-84 to GCJ-02.")
     @SqlType(StandardTypes.JSON)
-    public static Slice WGS84ToGCJ02(@SqlType(StandardTypes.DOUBLE) double wgLat, @SqlType(StandardTypes.DOUBLE) double wgLng) {
+    public static Slice WGS84ToGCJ02(@SqlType(StandardTypes.DOUBLE) double wgsLat, @SqlType(StandardTypes.DOUBLE) double wgsLng) {
         //判断是否在国内，不在国内不做偏移
-        if (outOfChina(wgLat, wgLng)) {
-            return Slices.utf8Slice(getJsonOfCoordinate(wgLat, wgLng));
+        if (outOfChina(wgsLat, wgsLng)) {
+            return Slices.utf8Slice(getJsonOfCoordinate(wgsLat, wgsLng));
         }
 
-        double[] delta = delta(wgLat, wgLng);
-        double gcgLat = wgLat + delta[0];
-        double gcgLng = wgLng + delta[1];
+        double[] delta = delta(wgsLat, wgsLng);
+        double gcjLat = wgsLat + delta[0];
+        double gcjLng = wgsLng + delta[1];
 
-        return Slices.utf8Slice(getJsonOfCoordinate(gcgLat, gcgLng));
+        return Slices.utf8Slice(getJsonOfCoordinate(gcjLat, gcjLng));
     }
 
-    // GCJ02(火星坐标系)转GPS84
+    // GCJ02(火星坐标系)转WGS84, 低精度(1-2m)
     @ScalarFunction("gcj_to_wgs")
     @Description("Convert GCJ-02 to WGS-84.")
     @SqlType(StandardTypes.JSON)
-    public static Slice GCJ02ToWGS84(@SqlType(StandardTypes.DOUBLE) double gcgLat, @SqlType(StandardTypes.DOUBLE) double gcgLng) {
+    public static Slice GCJ02ToWGS84(@SqlType(StandardTypes.DOUBLE) double gcjLat, @SqlType(StandardTypes.DOUBLE) double gcjLng) {
         //判断是否在国内，不在国内不做偏移
-        if (outOfChina(gcgLat, gcgLng)) {
-            return Slices.utf8Slice(getJsonOfCoordinate(gcgLat, gcgLng));
+        if (outOfChina(gcjLat, gcjLng)) {
+            return Slices.utf8Slice(getJsonOfCoordinate(gcjLat, gcjLng));
         }
 
-        double[] delta = delta(gcgLat, gcgLng);
-        double wgLat = gcgLat - delta[0];
-        double wgLng = gcgLng - delta[1];
+        double[] delta = delta(gcjLat, gcjLng);
+        double wgsLat = gcjLat - delta[0];
+        double wgsLng = gcjLng - delta[1];
 
-        return Slices.utf8Slice(getJsonOfCoordinate(wgLat, wgLng));
+        return Slices.utf8Slice(getJsonOfCoordinate(wgsLat, wgsLng));
+    }
+
+    // GCJ02(火星坐标系)转WGS84, 高精度(<0.5m)
+    @ScalarFunction("gcj_extract_wgs")
+    @Description("Convert GCJ-02 to WGS-84.")
+    @SqlType(StandardTypes.JSON)
+    public static Slice GCJ02ExtractWGS84(@SqlType(StandardTypes.DOUBLE) double gcjLat, @SqlType(StandardTypes.DOUBLE) double gcjLng) {
+        double initDelta = 0.01;
+        double threshold = 0.000001;
+        double dLat = initDelta;
+        double dLng = initDelta;
+        double mLat = gcjLat - dLat;
+        double mLng = gcjLng - dLng;
+        double pLat = gcjLat + dLat;
+        double pLng = gcjLng + dLng;
+        double wgsLat = 0, wgsLng = 0;
+
+        for (int i = 0; i < 30; i++) {
+            wgsLat = (mLat + pLat) / 2;
+            wgsLng = (mLng + pLng) / 2;
+
+            double[] tmp = wgs2gcj(wgsLat, wgsLng);
+            double tmpLat = tmp[0];
+            double tmpLng = tmp[1];
+            dLat = tmpLat - gcjLat;
+            dLng = tmpLng - gcjLng;
+            if (Math.abs(dLat) < threshold && Math.abs(dLng) < threshold) {
+                return Slices.utf8Slice(getJsonOfCoordinate(wgsLat, wgsLng));
+            }
+
+            if (dLat > 0) {
+                pLat = wgsLat;
+            } else {
+                mLat = wgsLat;
+            }
+
+            if (dLng > 0) {
+                pLng = wgsLng;
+            } else {
+                mLng = wgsLng;
+            }
+        }
+
+        return Slices.utf8Slice(getJsonOfCoordinate(wgsLat, wgsLng));
+    }
+
+    private static double[] wgs2gcj(double wgsLat, double wgsLng) {
+        double[] result = new double[2];
+        //判断是否在国内，不在国内不做偏移
+        if (outOfChina(wgsLat, wgsLng)) {
+            result[0] = wgsLat;
+            result[1] = wgsLng;
+            return result;
+        }
+
+        double[] delta = delta(wgsLat, wgsLng);
+        double gcjLat = wgsLat + delta[0];
+        double gcjLng = wgsLng + delta[1];
+
+        result[0] = gcjLat;
+        result[1] = gcjLng;
+        return result;
     }
 
     private static boolean outOfChina(double lat, double lng) {
@@ -110,7 +172,7 @@ public class GeographicFunctions {
         return false;
     }
 
-    private static double[] delta (double lat, double lng) {
+    private static double[] delta(double lat, double lng) {
         double[] delta = new double[2];
         double dLat = transformLat(lng - 105.0, lat - 35.0);
         double dLng = transformLng(lng - 105.0, lat - 35.0);
@@ -133,10 +195,10 @@ public class GeographicFunctions {
     }
 
     private static double transformLat(double lng, double lat) {
-        double ret = -100.0 + 2.0 * lng + 3.0 * lat + 0.2 * lat * lat + 0.1 * lng * lat + 0.2 *  Math.sqrt( Math.abs(lng));
-        ret += (20.0 * Math.sin(6.0 * lng *  Math.PI) + 20.0 *  Math.sin(2.0 * lng *  Math.PI)) * 2.0 / 3.0;
-        ret += (20.0 *  Math.sin(lat *  Math.PI) + 40.0 *  Math.sin(lat / 3.0 *  Math.PI)) * 2.0 / 3.0;
-        ret += (160.0 *  Math.sin(lat / 12.0 *  Math.PI) + 320 *  Math.sin(lat *  Math.PI / 30.0)) * 2.0 / 3.0;
+        double ret = -100.0 + 2.0 * lng + 3.0 * lat + 0.2 * lat * lat + 0.1 * lng * lat + 0.2 * Math.sqrt(Math.abs(lng));
+        ret += (20.0 * Math.sin(6.0 * lng * Math.PI) + 20.0 * Math.sin(2.0 * lng * Math.PI)) * 2.0 / 3.0;
+        ret += (20.0 * Math.sin(lat * Math.PI) + 40.0 * Math.sin(lat / 3.0 * Math.PI)) * 2.0 / 3.0;
+        ret += (160.0 * Math.sin(lat / 12.0 * Math.PI) + 320 * Math.sin(lat * Math.PI / 30.0)) * 2.0 / 3.0;
 
         return ret;
     }
@@ -148,7 +210,7 @@ public class GeographicFunctions {
             map.put("lng", longitude);
             ObjectMapper mapper = new ObjectMapper();
             return mapper.writeValueAsString(map);
-        }catch (JsonProcessingException e) {
+        } catch (JsonProcessingException e) {
             return null;
         }
     }
