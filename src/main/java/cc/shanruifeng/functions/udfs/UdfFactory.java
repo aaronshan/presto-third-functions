@@ -51,9 +51,7 @@ public class UdfFactory implements FunctionFactory {
             if (SqlAggregationFunction.class.isAssignableFrom(clazz)) {
                 try {
                     builder.function((SqlAggregationFunction) clazz.newInstance());
-                } catch (InstantiationException e) {
-                    logger.info(String.format("Could not add %s, exception: %s, stack: %s", clazz.getName(), e, e.getStackTrace()));
-                } catch (IllegalAccessException e) {
+                } catch (InstantiationException | IllegalAccessException e) {
                     logger.info(String.format("Could not add %s, exception: %s, stack: %s", clazz.getName(), e, e.getStackTrace()));
                 }
             } else {
@@ -82,13 +80,10 @@ public class UdfFactory implements FunctionFactory {
                         try {
                             WindowFunctionDefinition def = (WindowFunctionDefinition) clazz.newInstance();
                             builder.window(def.getName(), def.getReturnType(), def.getArgumentTypes(), (Class<? extends WindowFunction>) clazz);
-                        } catch (InstantiationException e) {
-                            logger.info(String.format("Could not add %s, exception: %s, stack: %s", clazz.getName(), e, e.getStackTrace()));
-                        } catch (IllegalAccessException e) {
+                        } catch (InstantiationException | IllegalAccessException e) {
                             logger.info(String.format("Could not add %s, exception: %s, stack: %s", clazz.getName(), e, e.getStackTrace()));
                         }
                     }
-
                 }
 
             }

@@ -5,9 +5,19 @@
 some presto functions
 
 ## Build
+
+### requires
+* Java 8 Update 60 or higher (8u60+)
+* Maven 3.3.9+ (for building)
+
 ```
 cd ${project_home}
 mvn clean package
+```
+
+If you want skip unit tests, please run:
+```
+mvn clean install -DskipTests
 ```
 
 It will generate presto-third-functions-0.1.0-shaded.jar in target directory.
@@ -16,12 +26,14 @@ It will generate presto-third-functions-0.1.0-shaded.jar in target directory.
 | function| description |
 |:--|:--|
 |dayofweek(date_string \| date) -> int | day of week,if monday,return 1, sunday return 7, error return -1.|
-|pinyin(string) -> int | convert chinese to pinyin|
+|pinyin(string) -> string | convert chinese to pinyin|
 |zodiac(date_string \| date) -> string | convert date to zodiac|
 |zodiac_cn(date_string \| date) -> string | convert date to zodiac chinese | 
 |wgs_distance(double lat1, double lng1, double lat2, double lng2) -> double | calculate WGS84 coordinate distance, in meters|
 |md5(string) -> string | md5 hash|
 |sha256(string) -> string |sha256 hash|
+|is_null(all_type) -> boolean |whether is null or not|
+|array_union(array, array) -> array |return union result of two array.|
 
 ## Use
 
@@ -71,6 +83,28 @@ _col0 | 95686bc0483262afe170b550dd4544d1
 _col1 | d16bb375433ad383169f911afdf45e209eabfcf047ba1faebdd8f6a0b39e0a32
 
 Query 20160712_071936_00006_hkbes, FINISHED, 1 node
+Splits: 1 total, 0 done (0.00%)
+0:00 [0 rows, 0B] [0 rows/s, 0B/s]
+
+
+presto:default> select is_null(col0),is_null(col1),is_null(col2),is_null(col3) from (values ('test', 1, 0.5, ARRAY [1]),(null, null, null, null)) as t(col0, col1, col2,col3);
+ _col0 | _col1 | _col2 | _col3
+-------+-------+-------+-------
+ false | false | false | false
+ true  | true  | true  | true
+(2 rows)
+
+Query 20160713_061435_00003_82kmt, FINISHED, 1 node
+Splits: 1 total, 0 done (0.00%)
+0:00 [0 rows, 0B] [0 rows/s, 0B/s]
+
+presto:default> select array_union(arr1, arr2) from (values (ARRAY [1,3,5,null], ARRAY [2,3,4,null])) as t(arr1, arr2);
+         _col0
+-----------------------
+ [1, 3, 5, null, 2, 4]
+(1 row)
+
+Query 20160713_061707_00004_82kmt, FINISHED, 1 node
 Splits: 1 total, 0 done (0.00%)
 0:00 [0 rows, 0B] [0 rows/s, 0B/s]
 ```

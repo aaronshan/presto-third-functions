@@ -6,18 +6,27 @@
 包含了一些presto自定义的函数
 
 ## 构建
+### 各软件版本:
+* Java 8 Update 60 及以上
+* Maven 3.3.9+
+
+### 命令:
 ```
 cd ${project_home}
 mvn clean package
 ```
 
+如果想要忽略单元测试,请执行:
+```
+mvn clean package -DskipTests
+```
 执行完命令后,将会生成在target目录下presto-third-functions-0.1.0-shaded.jar`文件.
 
 ## 函数
 | 函数| 说明|
 |:--|:--|
 |dayofweek(date_string \| date) -> int |计算给定日期是每周7天内的第几天,其中周一返回1,周天返回7,错误返回-1.|
-|pinyin(string) -> int | 将汉字转为拼音|
+|pinyin(string) -> string | 将汉字转为拼音|
 |zodiac(date_string \| date) -> string | 将日期转换为星座英文 |
 |zodiac_cn(date_string \| date) -> string | 将日期转换为星座中文 | 
 |id_card_province(string) -> string |由身份证号获取省份|
@@ -35,6 +44,8 @@ mvn clean package
 |gcj_extract_wgs(double,double) -> json |GCJ02(火星坐标系)转GPS84,输出的WGS-84坐标精度为0.5米内。但是计算速度慢于gcj_to_wgs|
 |md5(string) -> string |对字符串求md5值|
 |sha256(string) -> string |对字符串求sha256值|
+|is_null(all_type) -> boolean |是否是null|
+|array_union(array, array) -> array |求两个array的并集|
 
 > 关于互联网地图坐标系的说明见: [当前互联网地图的坐标系现状](https://github.com/aaronshan/presto-third-functions/tree/master/src/main/java/cc/shanruifeng/functions/udfs/scalar/geographic/README-geo.md)
 
@@ -109,6 +120,27 @@ _col0 | 95686bc0483262afe170b550dd4544d1
 _col1 | d16bb375433ad383169f911afdf45e209eabfcf047ba1faebdd8f6a0b39e0a32
 
 Query 20160712_071936_00006_hkbes, FINISHED, 1 node
+Splits: 1 total, 0 done (0.00%)
+0:00 [0 rows, 0B] [0 rows/s, 0B/s]
+
+presto:default> select is_null(col0),is_null(col1),is_null(col2),is_null(col3) from (values ('test', 1, 0.5, ARRAY [1]),(null, null, null, null)) as t(col0, col1, col2,col3);
+ _col0 | _col1 | _col2 | _col3
+-------+-------+-------+-------
+ false | false | false | false
+ true  | true  | true  | true
+(2 rows)
+
+Query 20160713_061435_00003_82kmt, FINISHED, 1 node
+Splits: 1 total, 0 done (0.00%)
+0:00 [0 rows, 0B] [0 rows/s, 0B/s]
+
+presto:default> select array_union(arr1, arr2) from (values (ARRAY [1,3,5,null], ARRAY [2,3,4,null])) as t(arr1, arr2);
+         _col0
+-----------------------
+ [1, 3, 5, null, 2, 4]
+(1 row)
+
+Query 20160713_061707_00004_82kmt, FINISHED, 1 node
 Splits: 1 total, 0 done (0.00%)
 0:00 [0 rows, 0B] [0 rows/s, 0B/s]
 ```

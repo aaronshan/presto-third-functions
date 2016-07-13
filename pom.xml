@@ -9,7 +9,12 @@
     <version>0.1.0</version>
 
     <properties>
-        <presto.version>0.145</presto.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.targetJdk>1.8</project.build.targetJdk>
+        <project.report.outputEncoding>UTF-8</project.report.outputEncoding>
+        <project.report.inputEncoding>UTF-8</project.report.inputEncoding>
+
+        <presto.version>0.147</presto.version>
         <pinyin4j.version>2.5.0</pinyin4j.version>
         <commons-codec.version>1.10</commons-codec.version>
         <junit.version>4.12</junit.version>
@@ -103,6 +108,29 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <!-- Tweak the compiler to use more memory and use UTF-8 for the source code. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>${project.build.targetJdk}</source>
+                    <target>${project.build.targetJdk}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <showWarnings>true</showWarnings>
+                </configuration>
+            </plugin>
+
+            <!-- Resource plugins should always use UTF-8 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
             </plugin>
         </plugins>
     </build>

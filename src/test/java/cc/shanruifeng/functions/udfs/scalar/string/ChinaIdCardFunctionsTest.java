@@ -64,6 +64,6 @@ public class ChinaIdCardFunctionsTest {
     public void testGetIdInfo() throws Exception {
         Slice result = ChinaIdCardFunctions.getJsonOfChinaIdCard(Slices.utf8Slice("110101198901084517"));
         ObjectMapper mapper = new ObjectMapper();
-        Assert.assertEquals(true,mapper.readValue(result.toStringUtf8(), Map.class).get("valid"));
+        Assert.assertEquals(true, mapper.readValue(result.toStringUtf8(), Map.class).get("valid"));
     }
 }
