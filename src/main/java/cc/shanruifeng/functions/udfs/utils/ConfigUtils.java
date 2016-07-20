@@ -64,4 +64,21 @@ public class ConfigUtils {
 
         return map;
     }
+
+    public static Map<String, String> getDayMap() {
+        String fileName = "/china_day_type.config";
+        Map<String, String> map = Maps.newHashMap();
+        try {
+            List<String> list = loadFile(fileName);
+            for (String line : list) {
+                String[] results = line.split("\t", 2);
+                map.put(results[0], results[1]);
+            }
+        } catch (IOException e) {
+            logger.error("get day map error. error is {}.", e);
+            return map;
+        }
+
+        return map;
+    }
 }
