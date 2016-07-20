@@ -17,23 +17,41 @@ mvn clean package
 
 If you want skip unit tests, please run:
 ```
-mvn clean install -DskipTests
+mvn clean package -DskipTests
 ```
 
 It will generate presto-third-functions-0.1.0-shaded.jar in target directory.
 
 ## functions
+
+### 1. string functions
+| function| description |
+|:--|:--|
+|pinyin(string) -> string | convert chinese to pinyin|
+|md5(string) -> string | md5 hash|
+|sha256(string) -> string |sha256 hash|
+
+### 2. array functions
+| function| description |
+|:--|:--|
+|array_union(array, array) -> array |return union result of two array.|
+
+### 3. date functions
 | function| description |
 |:--|:--|
 |dayofweek(date_string \| date) -> int | day of week,if monday,return 1, sunday return 7, error return -1.|
-|pinyin(string) -> string | convert chinese to pinyin|
 |zodiac(date_string \| date) -> string | convert date to zodiac|
 |zodiac_cn(date_string \| date) -> string | convert date to zodiac chinese | 
+
+### 4. geographic functions 
+| function| description |
+|:--|:--|
 |wgs_distance(double lat1, double lng1, double lat2, double lng2) -> double | calculate WGS84 coordinate distance, in meters|
-|md5(string) -> string | md5 hash|
-|sha256(string) -> string |sha256 hash|
+
+### 5. other functions
+| function| description |
+|:--|:--|
 |is_null(all_type) -> boolean |whether is null or not|
-|array_union(array, array) -> array |return union result of two array.|
 
 ## Use
 
