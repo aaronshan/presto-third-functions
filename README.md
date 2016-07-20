@@ -23,12 +23,29 @@ mvn clean package -DskipTests
 执行完命令后,将会生成在target目录下presto-third-functions-0.1.0-shaded.jar`文件.
 
 ## 函数
+### 1. 字符串相关函数
+| 函数| 说明|
+|:--|:--|
+|pinyin(string) -> string | 将汉字转为拼音|
+|md5(string) -> string |对字符串求md5值|
+|sha256(string) -> string |对字符串求sha256值|
+
+### 2. 日期相关函数
 | 函数| 说明|
 |:--|:--|
 |dayofweek(date_string \| date) -> int |计算给定日期是每周7天内的第几天,其中周一返回1,周天返回7,错误返回-1.|
-|pinyin(string) -> string | 将汉字转为拼音|
 |zodiac(date_string \| date) -> string | 将日期转换为星座英文 |
 |zodiac_cn(date_string \| date) -> string | 将日期转换为星座中文 | 
+|typeofdate(date_string \| date) -> string | 获取日期的类型(1: 法定节假日, 2: 正常周末, 3: 正常工作日 4:攒假的工作日),错误返回-1. | 
+
+### 3. 数组相关函数
+| 函数| 说明|
+|:--|:--|
+|array_union(array, array) -> array |求两个array的并集|
+
+### 4. 身份证相关函数
+| 函数| 说明|
+|:--|:--|
 |id_card_province(string) -> string |由身份证号获取省份|
 |id_card_city(string) -> string |由身份证号获取城市|
 |id_card_area(string) -> string |由身份证号获取区或县|
@@ -36,19 +53,23 @@ mvn clean package -DskipTests
 |id_card_gender(string) -> string |由身份证号获取性别|
 |is_valid_id_card(string) -> boolean |鉴别是否是有效的身份证号|
 |id_card_info(string) -> json |获取身份证号对应的信息,包括省份,城市,区县,性别及是否有效|
+
+### 5. 坐标相关函数
+| 函数| 说明|
+|:--|:--|
 |wgs_distance(double lat1, double lng1, double lat2, double lng2) -> double |计算WGS84坐标系下的坐标距离,单位为米|
 |gcj_to_bd(double,double) -> json |火星坐标系(GCJ-02)转百度坐标系(BD-09),谷歌、高德——>百度|
 |bd_to_gcj(double,double) -> json |百度坐标系(BD-09)转火星坐标系(GCJ-02),百度——>谷歌、高德|
 |wgs_to_gcj(double,double) -> json |WGS84转GCJ02(火星坐标系)|
 |gcj_to_wgs(double,double) -> json |GCJ02(火星坐标系)转GPS84,输出的WGS-84坐标精度为1米到2米之间。|
 |gcj_extract_wgs(double,double) -> json |GCJ02(火星坐标系)转GPS84,输出的WGS-84坐标精度为0.5米内。但是计算速度慢于gcj_to_wgs|
-|md5(string) -> string |对字符串求md5值|
-|sha256(string) -> string |对字符串求sha256值|
-|is_null(all_type) -> boolean |是否是null|
-|array_union(array, array) -> array |求两个array的并集|
 
 > 关于互联网地图坐标系的说明见: [当前互联网地图的坐标系现状](https://github.com/aaronshan/presto-third-functions/tree/master/src/main/java/cc/shanruifeng/functions/udfs/scalar/geographic/README-geo.md)
 
+### 6. 其他函数
+| 函数| 说明|
+|:--|:--|
+|is_null(all_type) -> boolean |是否是null|
 
 ## 用法
 
