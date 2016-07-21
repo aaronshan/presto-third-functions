@@ -43,6 +43,8 @@ mvn clean package -DskipTests
 |:--|:--|
 |array_union(array, array) -> array |求两个array的并集|
 
+> 我已经发起了一个`array_union`的[PR](https://github.com/prestodb/presto/pull/5644#event-729329053), 现在它已经被合并到presto的master分支中. 因此,如果你的presto版本 > 0.151,它已经包含了`array_union`函数.
+
 ### 4. 身份证相关函数
 | 函数| 说明|
 |:--|:--|

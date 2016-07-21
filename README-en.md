@@ -36,6 +36,8 @@ It will generate presto-third-functions-0.1.0-shaded.jar in target directory.
 |:--|:--|
 |array_union(array, array) -> array |return union result of two array.|
 
+> I had already proposed a [pull request](https://github.com/prestodb/presto/pull/5644#event-729329053) about `array_union`. Currently, it be merged to presto master branch. So, If your presto version > 0.151, it already include array_union function.
+
 ### 3. date functions
 | function| description |
 |:--|:--|
