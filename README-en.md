@@ -45,12 +45,18 @@ It will generate presto-third-functions-0.1.0-shaded.jar in target directory.
 |zodiac(date_string \| date) -> string | convert date to zodiac|
 |zodiac_cn(date_string \| date) -> string | convert date to zodiac chinese | 
 
-### 4. geographic functions 
+### 4. JSON functions
+| function| description |
+|:--|:--|
+|json_array_extract(json, jsonPath) -> array(varchar) |extract json array by given jsonPath.|
+|json_array_extract_scalar(json, jsonPath) -> array(varchar) |like `json_array_extract`, but returns the result value as a string (as opposed to being encoded as JSON).|
+
+### 5. geographic functions 
 | function| description |
 |:--|:--|
 |wgs_distance(double lat1, double lng1, double lat2, double lng2) -> double | calculate WGS84 coordinate distance, in meters|
 
-### 5. other functions
+### 6. other functions
 | function| description |
 |:--|:--|
 |is_null(all_type) -> boolean |whether is null or not|
@@ -75,18 +81,8 @@ alias presto="/home/presto/presto-cli --server localhost:8080 --catalog hive --s
 ```
 
 ### 3. example
+#### 3.1 string functions
 ```
-presto
-presto:default> select dayofweek(my_day) from (values '2016-07-07') as t(my_day);
- _col0
--------
-     4
-(1 row)
-
-Query 20160707_073523_00005_iya2r, FINISHED, 1 node
-Splits: 1 total, 0 done (0.00%)
-0:00 [0 rows, 0B] [0 rows/s, 0B/s]
-
 presto:default> select pinyin(country) from (values '中国') as t(country);
   _col0
 ----------
@@ -96,7 +92,9 @@ presto:default> select pinyin(country) from (values '中国') as t(country);
 Query 20160707_073649_00006_iya2r, FINISHED, 1 node
 Splits: 1 total, 0 done (0.00%)
 0:00 [0 rows, 0B] [0 rows/s, 0B/s]
+```
 
+```
 presto:default> select md5(col1), sha256(col1) from (values 'aaronshan') as t(col1)\G;
 -[ RECORD 1 ]-----------------------------------------------------------
 _col0 | 95686bc0483262afe170b550dd4544d1
@@ -105,19 +103,10 @@ _col1 | d16bb375433ad383169f911afdf45e209eabfcf047ba1faebdd8f6a0b39e0a32
 Query 20160712_071936_00006_hkbes, FINISHED, 1 node
 Splits: 1 total, 0 done (0.00%)
 0:00 [0 rows, 0B] [0 rows/s, 0B/s]
+```
 
-
-presto:default> select is_null(col0),is_null(col1),is_null(col2),is_null(col3) from (values ('test', 1, 0.5, ARRAY [1]),(null, null, null, null)) as t(col0, col1, col2,col3);
- _col0 | _col1 | _col2 | _col3
--------+-------+-------+-------
- false | false | false | false
- true  | true  | true  | true
-(2 rows)
-
-Query 20160713_061435_00003_82kmt, FINISHED, 1 node
-Splits: 1 total, 0 done (0.00%)
-0:00 [0 rows, 0B] [0 rows/s, 0B/s]
-
+#### 3.2 array functions
+```
 presto:default> select array_union(arr1, arr2) from (values (ARRAY [1,3,5,null], ARRAY [2,3,4,null])) as t(arr1, arr2);
          _col0
 -----------------------
@@ -129,4 +118,56 @@ Splits: 1 total, 0 done (0.00%)
 0:00 [0 rows, 0B] [0 rows/s, 0B/s]
 ```
 
+#### 3.3 date functions
+```
+presto
+presto:default> select dayofweek(my_day) from (values '2016-07-07') as t(my_day);
+ _col0
+-------
+     4
+(1 row)
 
+Query 20160707_073523_00005_iya2r, FINISHED, 1 node
+Splits: 1 total, 0 done (0.00%)
+0:00 [0 rows, 0B] [0 rows/s, 0B/s]
+```
+
+#### 3.4 JSON functions
+```
+presto:default> select json_array_extract(arr1, '$.book.id') from (values ('[{"book":{"id":"12"}}, {"book":{"id":"14"}}]')) t(arr1);
+    _col0
+--------------
+ ["12", "14"]
+(1 row)
+
+Query 20160721_105423_00006_xgf26, FINISHED, 1 node
+Splits: 1 total, 0 done (0.00%)
+0:00 [0 rows, 0B] [0 rows/s, 0B/s]
+```
+
+
+```
+presto:default> select json_array_extract_scalar(arr1, '$.book.id') from (values ('[{"book":{"id":"12"}}, {"book":{"id":"14"}}]')) t(arr1);
+  _col0
+----------
+ [12, 14]
+(1 row)
+
+Query 20160721_105426_00007_xgf26, FINISHED, 1 node
+Splits: 1 total, 0 done (0.00%)
+0:00 [0 rows, 0B] [0 rows/s, 0B/s]
+```
+
+#### 3.5 other functions
+```
+presto:default> select is_null(col0),is_null(col1),is_null(col2),is_null(col3) from (values ('test', 1, 0.5, ARRAY [1]),(null, null, null, null)) as t(col0, col1, col2,col3);
+ _col0 | _col1 | _col2 | _col3
+-------+-------+-------+-------
+ false | false | false | false
+ true  | true  | true  | true
+(2 rows)
+
+Query 20160713_061435_00003_82kmt, FINISHED, 1 node
+Splits: 1 total, 0 done (0.00%)
+0:00 [0 rows, 0B] [0 rows/s, 0B/s]
+```

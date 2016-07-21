@@ -45,7 +45,13 @@ mvn clean package -DskipTests
 
 > 我已经发起了一个`array_union`的[PR](https://github.com/prestodb/presto/pull/5644#event-729329053), 现在它已经被合并到presto的master分支中. 因此,如果你的presto版本 > 0.151,它已经包含了`array_union`函数.
 
-### 4. 身份证相关函数
+### 4. JSON相关函数
+| 函数| 说明|
+|:--|:--|
+|json_array_extract(json, jsonPath) -> array(varchar) |提取json数组中对应路径的值|
+|json_array_extract_scalar(json, jsonPath) -> array(varchar) |和`json_array_extract`类似,但是返回结果是string(不是json格式)|
+
+### 5. 身份证相关函数
 | 函数| 说明|
 |:--|:--|
 |id_card_province(string) -> string |由身份证号获取省份|
@@ -56,7 +62,7 @@ mvn clean package -DskipTests
 |is_valid_id_card(string) -> boolean |鉴别是否是有效的身份证号|
 |id_card_info(string) -> json |获取身份证号对应的信息,包括省份,城市,区县,性别及是否有效|
 
-### 5. 坐标相关函数
+### 6. 坐标相关函数
 | 函数| 说明|
 |:--|:--|
 |wgs_distance(double lat1, double lng1, double lat2, double lng2) -> double |计算WGS84坐标系下的坐标距离,单位为米|
@@ -68,7 +74,7 @@ mvn clean package -DskipTests
 
 > 关于互联网地图坐标系的说明见: [当前互联网地图的坐标系现状](https://github.com/aaronshan/presto-third-functions/tree/master/src/main/java/cc/shanruifeng/functions/udfs/scalar/geographic/README-geo.md)
 
-### 6. 其他函数
+### 7. 其他函数
 | 函数| 说明|
 |:--|:--|
 |is_null(all_type) -> boolean |是否是null|
@@ -93,6 +99,32 @@ alias presto="/home/presto/presto-cli --server localhost:8080 --catalog hive --s
 ```
 
 ### 3. 示例
+#### 3.1 字符串相关函数
+```
+presto:default> select pinyin(country) from (values '中国') as t(country);
+  _col0
+----------
+ zhongguo
+(1 row)
+
+Query 20160707_073649_00006_iya2r, FINISHED, 1 node
+Splits: 1 total, 0 done (0.00%)
+0:00 [0 rows, 0B] [0 rows/s, 0B/s]
+```
+
+
+```
+presto:default> select md5(col1), sha256(col1) from (values 'aaronshan') as t(col1)\G;
+-[ RECORD 1 ]-----------------------------------------------------------
+_col0 | 95686bc0483262afe170b550dd4544d1
+_col1 | d16bb375433ad383169f911afdf45e209eabfcf047ba1faebdd8f6a0b39e0a32
+
+Query 20160712_071936_00006_hkbes, FINISHED, 1 node
+Splits: 1 total, 0 done (0.00%)
+0:00 [0 rows, 0B] [0 rows/s, 0B/s]
+```
+
+#### 3.2 日期相关函数
 ```
 presto
 presto:default> select dayofweek(my_day) from (values '2016-07-07') as t(my_day);
@@ -104,17 +136,62 @@ presto:default> select dayofweek(my_day) from (values '2016-07-07') as t(my_day)
 Query 20160707_073523_00005_iya2r, FINISHED, 1 node
 Splits: 1 total, 0 done (0.00%)
 0:00 [0 rows, 0B] [0 rows/s, 0B/s]
+```
 
-presto:default> select pinyin(country) from (values '中国') as t(country);
-  _col0
-----------
- zhongguo
+#### 3.3 数组相关函数
+```
+presto:default> select array_union(arr1, arr2) from (values (ARRAY [1,3,5,null], ARRAY [2,3,4,null])) as t(arr1, arr2);
+         _col0
+-----------------------
+ [1, 3, 5, null, 2, 4]
 (1 row)
 
-Query 20160707_073649_00006_iya2r, FINISHED, 1 node
+Query 20160713_061707_00004_82kmt, FINISHED, 1 node
 Splits: 1 total, 0 done (0.00%)
 0:00 [0 rows, 0B] [0 rows/s, 0B/s]
+```
 
+#### 3.4 JSON相关函数
+```
+presto:default> select json_array_extract(arr1, '$.book.id') from (values ('[{"book":{"id":"12"}}, {"book":{"id":"14"}}]')) t(arr1);
+    _col0
+--------------
+ ["12", "14"]
+(1 row)
+
+Query 20160721_105423_00006_xgf26, FINISHED, 1 node
+Splits: 1 total, 0 done (0.00%)
+0:00 [0 rows, 0B] [0 rows/s, 0B/s]
+```
+
+
+```
+presto:default> select json_array_extract_scalar(arr1, '$.book.id') from (values ('[{"book":{"id":"12"}}, {"book":{"id":"14"}}]')) t(arr1);
+  _col0
+----------
+ [12, 14]
+(1 row)
+
+Query 20160721_105426_00007_xgf26, FINISHED, 1 node
+Splits: 1 total, 0 done (0.00%)
+0:00 [0 rows, 0B] [0 rows/s, 0B/s]
+```
+
+#### 3.5 身份证相关函数
+```
+presto:default> select id_card_info(card) from (values '110101198901084517') as t(card);
+                                      _col0
+----------------------------------------------------------------------------------
+ {"area":"东城区","valid":true,"province":"北京市","gender":"男","city":"北京市"}
+(1 row)
+
+Query 20160712_071700_00004_hkbes, FINISHED, 1 node
+Splits: 1 total, 0 done (0.00%)
+0:00 [0 rows, 0B] [0 rows/s, 0B/s]
+```
+
+#### 3.6 坐标相关函数
+```
 presto:default> select gcj_to_bd(lat,lng), bd_to_gcj(lat,lng), wgs_to_gcj(lat,lng), gcj_to_wgs(lat,lng), gcj_extract_wgs(lat,lng) from (values (39.915, 116.404)) as t(lat, lng)\G;
 -[ RECORD 1 ]----------------------------------------------
 _col0 | {"lng":116.41036949371029,"lat":39.92133699351022}
@@ -126,26 +203,10 @@ _col4 | {"lng":116.39775549316407,"lat":39.913596801757805}
 Query 20160712_024714_00003_9rund, FINISHED, 1 node
 Splits: 1 total, 0 done (0.00%)
 0:00 [0 rows, 0B] [0 rows/s, 0B/s]
+```
 
-presto:default> select id_card_info(card) from (values '110101198901084517') as t(card);
-                                      _col0
-----------------------------------------------------------------------------------
- {"area":"东城区","valid":true,"province":"北京市","gender":"男","city":"北京市"}
-(1 row)
-
-Query 20160712_071700_00004_hkbes, FINISHED, 1 node
-Splits: 1 total, 0 done (0.00%)
-0:00 [0 rows, 0B] [0 rows/s, 0B/s]
-
-presto:default> select md5(col1), sha256(col1) from (values 'aaronshan') as t(col1)\G;
--[ RECORD 1 ]-----------------------------------------------------------
-_col0 | 95686bc0483262afe170b550dd4544d1
-_col1 | d16bb375433ad383169f911afdf45e209eabfcf047ba1faebdd8f6a0b39e0a32
-
-Query 20160712_071936_00006_hkbes, FINISHED, 1 node
-Splits: 1 total, 0 done (0.00%)
-0:00 [0 rows, 0B] [0 rows/s, 0B/s]
-
+#### 3.7 其他函数
+```
 presto:default> select is_null(col0),is_null(col1),is_null(col2),is_null(col3) from (values ('test', 1, 0.5, ARRAY [1]),(null, null, null, null)) as t(col0, col1, col2,col3);
  _col0 | _col1 | _col2 | _col3
 -------+-------+-------+-------
@@ -154,16 +215,6 @@ presto:default> select is_null(col0),is_null(col1),is_null(col2),is_null(col3) f
 (2 rows)
 
 Query 20160713_061435_00003_82kmt, FINISHED, 1 node
-Splits: 1 total, 0 done (0.00%)
-0:00 [0 rows, 0B] [0 rows/s, 0B/s]
-
-presto:default> select array_union(arr1, arr2) from (values (ARRAY [1,3,5,null], ARRAY [2,3,4,null])) as t(arr1, arr2);
-         _col0
------------------------
- [1, 3, 5, null, 2, 4]
-(1 row)
-
-Query 20160713_061707_00004_82kmt, FINISHED, 1 node
 Splits: 1 total, 0 done (0.00%)
 0:00 [0 rows, 0B] [0 rows/s, 0B/s]
 ```
