@@ -38,6 +38,12 @@ public class IsNullFunctions {
 
     @TypeParameter("T")
     @SqlType(StandardTypes.BOOLEAN)
+    public static boolean isNullBoolean(@Nullable @SqlType("T") Boolean value) {
+        return (value == null);
+    }
+
+    @TypeParameter("T")
+    @SqlType(StandardTypes.BOOLEAN)
     public static boolean isNullBlock(@Nullable @SqlType("T") Block value) {
         return (value == null);
     }

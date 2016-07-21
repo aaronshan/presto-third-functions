@@ -15,7 +15,7 @@ import static com.facebook.presto.spi.type.BigintType.BIGINT;
  * @date 2016-07-12
  * @time 15:44
  */
-public class IsNullOrEmptyFunctionsTest {
+public class IsNullFunctionsTest {
 
     @Test
     public void testFunctionCreate() throws Exception {
@@ -40,6 +40,12 @@ public class IsNullOrEmptyFunctionsTest {
     public void testIsNullDouble() throws Exception {
         Assert.assertEquals(true, IsNullFunctions.isNullDouble(null));
         Assert.assertEquals(false, IsNullFunctions.isNullDouble(0.0));
+    }
+
+    @Test
+    public void testIsNullBoolean() throws Exception {
+        Assert.assertEquals(true, IsNullFunctions.isNullBoolean(null));
+        Assert.assertEquals(false, IsNullFunctions.isNullBoolean(true));
     }
 
     @Test
