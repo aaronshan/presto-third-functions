@@ -1,13 +1,23 @@
 package cc.shanruifeng.functions.udfs.scalar.array;
 
+import com.facebook.presto.block.BlockEncodingManager;
 import com.facebook.presto.metadata.FunctionListBuilder;
+import com.facebook.presto.metadata.FunctionRegistry;
+import com.facebook.presto.metadata.OperatorType;
 import com.facebook.presto.spi.block.Block;
 import com.facebook.presto.spi.block.BlockBuilder;
 import com.facebook.presto.spi.block.BlockBuilderStatus;
+import com.facebook.presto.spi.type.BooleanType;
+import com.facebook.presto.type.ArrayType;
 import com.facebook.presto.type.TypeRegistry;
+import com.google.common.collect.ImmutableList;
 import junit.framework.Assert;
 import org.junit.Test;
 
+import java.lang.invoke.MethodHandle;
+
+import static cc.shanruifeng.functions.udfs.scalar.StructuralTestUtil.arrayBlockOf;
+import static com.facebook.presto.metadata.Signature.internalOperator;
 import static com.facebook.presto.spi.type.BigintType.BIGINT;
 import static com.facebook.presto.spi.type.VarcharType.VARCHAR;
 
@@ -25,33 +35,37 @@ public class ArrayUnionFunctionTest {
     }
 
     @Test
-    public void testUnion() throws Exception {
-        BlockBuilder leftArrayBuilder = VARCHAR.createBlockBuilder(new BlockBuilderStatus(), 100);
-        VARCHAR.writeString(leftArrayBuilder, "13");
-        VARCHAR.writeString(leftArrayBuilder, "18");
+    public void testUnion() throws Throwable {
+        //construct ARRAY['13', '18', '13']
+        Block leftArray = arrayBlockOf(VARCHAR, "13", "18", "13");
+        //construct ARRAY['13', '20']
+        Block rightArray = arrayBlockOf(VARCHAR, "13", "20");
+        //construct ARRAY['13', '18', '20']
+        Block expectArray = arrayBlockOf(VARCHAR, "13", "18", "20");
 
-        BlockBuilder rightArrayBuilder = VARCHAR.createBlockBuilder(new BlockBuilderStatus(), 100);
-        VARCHAR.writeString(rightArrayBuilder, "13");
-        VARCHAR.writeString(rightArrayBuilder, "20");
-
-        Block block = ArrayUnionFunction.union(VARCHAR, leftArrayBuilder.build(), rightArrayBuilder.build());
-        Block block1 = ArrayUnionFunction.union(VARCHAR, null, rightArrayBuilder.build());
-        Assert.assertEquals(3, block.getPositionCount());
-        Assert.assertEquals(2, block1.getPositionCount());
+        Block resultArray = ArrayUnionFunction.union(VARCHAR, leftArray, rightArray);
+        TypeRegistry typeManager = new TypeRegistry();
+        FunctionRegistry functionRegistry = new FunctionRegistry(typeManager, new BlockEncodingManager(typeManager), false);
+        FunctionListBuilder builder = new FunctionListBuilder(typeManager);
+        functionRegistry.addFunctions(builder.getFunctions());
+        MethodHandle equalsMethod = functionRegistry.getScalarFunctionImplementation(internalOperator(OperatorType.EQUAL, BooleanType.BOOLEAN, ImmutableList.of(new ArrayType(VARCHAR), new ArrayType(VARCHAR)))).getMethodHandle();
+        Assert.assertEquals(3, resultArray.getPositionCount());
+        Assert.assertEquals(true, (boolean)equalsMethod.invokeExact(resultArray, expectArray));
     }
 
     @Test
-    public void testBigintUnion() throws Exception {
-        BlockBuilder leftArrayBuilder = BIGINT.createBlockBuilder(new BlockBuilderStatus(), 100);
-        BIGINT.writeLong(leftArrayBuilder, 13);
-        BIGINT.writeLong(leftArrayBuilder, 18);
+    public void testBigintUnion() throws Throwable {
+        Block leftArray = arrayBlockOf(BIGINT, 13, 18, 13);
+        Block rightArray = arrayBlockOf(BIGINT, 13, 20);
+        Block expectArray = arrayBlockOf(BIGINT, 13, 18, 20);
 
-        BlockBuilder rightArrayBuilder = BIGINT.createBlockBuilder(new BlockBuilderStatus(), 100);
-        BIGINT.writeLong(rightArrayBuilder, 13);
-        BIGINT.writeLong(rightArrayBuilder, 20);
-        Block block = ArrayUnionFunction.bigintUnion(leftArrayBuilder.build(), rightArrayBuilder.build());
-        Block block1 = ArrayUnionFunction.bigintUnion(null, rightArrayBuilder.build());
-        Assert.assertEquals(3, block.getPositionCount());
-        Assert.assertEquals(2, block1.getPositionCount());
+        Block resultArray = ArrayUnionFunction.bigintUnion(leftArray, rightArray);
+        TypeRegistry typeManager = new TypeRegistry();
+        FunctionRegistry functionRegistry = new FunctionRegistry(typeManager, new BlockEncodingManager(typeManager), false);
+        FunctionListBuilder builder = new FunctionListBuilder(typeManager);
+        functionRegistry.addFunctions(builder.getFunctions());
+        MethodHandle equalsMethod = functionRegistry.getScalarFunctionImplementation(internalOperator(OperatorType.EQUAL, BooleanType.BOOLEAN, ImmutableList.of(new ArrayType(BIGINT), new ArrayType(BIGINT)))).getMethodHandle();
+        Assert.assertEquals(3, resultArray.getPositionCount());
+        Assert.assertEquals(true, (boolean)equalsMethod.invokeExact(resultArray, expectArray));
     }
 }
