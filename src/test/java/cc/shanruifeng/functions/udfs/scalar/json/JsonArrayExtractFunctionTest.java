@@ -38,7 +38,7 @@ public class JsonArrayExtractFunctionTest {
     public void testVarcharJsonExtract() throws Throwable {
         Block expectArray = arrayBlockOf(VARCHAR, "13", "18", "12");
         Slice inputJson = Slices.utf8Slice("[{\"a\":{\"b\":13}}, {\"a\":{\"b\":18}}, {\"a\":{\"b\":12}}]");
-        Block resultArray = JsonArrayExtractFunction.varcharJsonExtract(inputJson, new JsonPath("$.a.b"));
+        Block resultArray = JsonArrayExtractFunction.jsonArrayExtract(inputJson, new JsonPath("$.a.b"));
 
         TypeRegistry typeManager = new TypeRegistry();
         FunctionRegistry functionRegistry = new FunctionRegistry(typeManager, new BlockEncodingManager(typeManager), false);

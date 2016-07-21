@@ -35,6 +35,7 @@ It will generate presto-third-functions-0.1.0-shaded.jar in target directory.
 | function| description |
 |:--|:--|
 |array_union(array, array) -> array |return union result of two array.|
+|value_count(array(T), T value) -> int | count ARRAY's element number that element value equals given value.|
 
 > I had already proposed a [pull request](https://github.com/prestodb/presto/pull/5644#event-729329053) about `array_union`. Currently, it be merged to presto master branch. So, If your presto version > 0.151, it already include array_union function.
 
@@ -51,12 +52,17 @@ It will generate presto-third-functions-0.1.0-shaded.jar in target directory.
 |json_array_extract(json, jsonPath) -> array(varchar) |extract json array by given jsonPath.|
 |json_array_extract_scalar(json, jsonPath) -> array(varchar) |like `json_array_extract`, but returns the result value as a string (as opposed to being encoded as JSON).|
 
-### 5. geographic functions 
+### 5. MAP functions
+| function| description |
+|:--|:--|
+|value_count(MAP(K,V), V value) -> int | count MAP's element number that element value equals given value.|
+
+### 6. geographic functions 
 | function| description |
 |:--|:--|
 |wgs_distance(double lat1, double lng1, double lat2, double lng2) -> double | calculate WGS84 coordinate distance, in meters|
 
-### 6. other functions
+### 7. other functions
 | function| description |
 |:--|:--|
 |is_null(all_type) -> boolean |whether is null or not|
@@ -118,6 +124,18 @@ Splits: 1 total, 0 done (0.00%)
 0:00 [0 rows, 0B] [0 rows/s, 0B/s]
 ```
 
+```
+presto:default> select value_count(arr1, 'a') from (values (ARRAY['a', 'b', 'a'])) t(arr1);
+ _col0
+-------
+     2
+(1 row)
+
+Query 20160721_111719_00008_xgf26, FINISHED, 1 node
+Splits: 1 total, 0 done (0.00%)
+0:00 [0 rows, 0B] [0 rows/s, 0B/s]
+```
+
 #### 3.3 date functions
 ```
 presto
@@ -154,6 +172,19 @@ presto:default> select json_array_extract_scalar(arr1, '$.book.id') from (values
 (1 row)
 
 Query 20160721_105426_00007_xgf26, FINISHED, 1 node
+Splits: 1 total, 0 done (0.00%)
+0:00 [0 rows, 0B] [0 rows/s, 0B/s]
+```
+
+#### 3.5 MAP functions
+```
+presto:default> select map1, value_count(map1, 'a') from (values (map(ARRAY[1,2,3], ARRAY['a', 'b', 'a']))) t(map1);
+      map1       | _col1
+-----------------+-------
+ {1=a, 2=b, 3=a} |     2
+(1 row)
+
+Query 20160721_111906_00011_xgf26, FINISHED, 1 node
 Splits: 1 total, 0 done (0.00%)
 0:00 [0 rows, 0B] [0 rows/s, 0B/s]
 ```

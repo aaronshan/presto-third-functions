@@ -42,6 +42,7 @@ mvn clean package -DskipTests
 | 函数| 说明|
 |:--|:--|
 |array_union(array, array) -> array |求两个array的并集|
+|value_count(array(T), T value) -> int | 统计在数组中值为给定值的元素个数|
 
 > 我已经发起了一个`array_union`的[PR](https://github.com/prestodb/presto/pull/5644#event-729329053), 现在它已经被合并到presto的master分支中. 因此,如果你的presto版本 > 0.151,它已经包含了`array_union`函数.
 
@@ -51,7 +52,12 @@ mvn clean package -DskipTests
 |json_array_extract(json, jsonPath) -> array(varchar) |提取json数组中对应路径的值|
 |json_array_extract_scalar(json, jsonPath) -> array(varchar) |和`json_array_extract`类似,但是返回结果是string(不是json格式)|
 
-### 5. 身份证相关函数
+### 5. MAP相关函数
+| 函数| 说明|
+|:--|:--|
+|value_count(MAP(K,V), V value) -> int | 统计中MAP中值为给定值的元素的个数|
+
+### 6. 身份证相关函数
 | 函数| 说明|
 |:--|:--|
 |id_card_province(string) -> string |由身份证号获取省份|
@@ -62,7 +68,7 @@ mvn clean package -DskipTests
 |is_valid_id_card(string) -> boolean |鉴别是否是有效的身份证号|
 |id_card_info(string) -> json |获取身份证号对应的信息,包括省份,城市,区县,性别及是否有效|
 
-### 6. 坐标相关函数
+### 7. 坐标相关函数
 | 函数| 说明|
 |:--|:--|
 |wgs_distance(double lat1, double lng1, double lat2, double lng2) -> double |计算WGS84坐标系下的坐标距离,单位为米|
@@ -74,7 +80,7 @@ mvn clean package -DskipTests
 
 > 关于互联网地图坐标系的说明见: [当前互联网地图的坐标系现状](https://github.com/aaronshan/presto-third-functions/tree/master/src/main/java/cc/shanruifeng/functions/udfs/scalar/geographic/README-geo.md)
 
-### 7. 其他函数
+### 8. 其他函数
 | 函数| 说明|
 |:--|:--|
 |is_null(all_type) -> boolean |是否是null|
@@ -151,6 +157,18 @@ Splits: 1 total, 0 done (0.00%)
 0:00 [0 rows, 0B] [0 rows/s, 0B/s]
 ```
 
+```
+presto:default> select value_count(arr1, 'a') from (values (ARRAY['a', 'b', 'a'])) t(arr1);
+ _col0
+-------
+     2
+(1 row)
+
+Query 20160721_111719_00008_xgf26, FINISHED, 1 node
+Splits: 1 total, 0 done (0.00%)
+0:00 [0 rows, 0B] [0 rows/s, 0B/s]
+```
+
 #### 3.4 JSON相关函数
 ```
 presto:default> select json_array_extract(arr1, '$.book.id') from (values ('[{"book":{"id":"12"}}, {"book":{"id":"14"}}]')) t(arr1);
@@ -173,6 +191,19 @@ presto:default> select json_array_extract_scalar(arr1, '$.book.id') from (values
 (1 row)
 
 Query 20160721_105426_00007_xgf26, FINISHED, 1 node
+Splits: 1 total, 0 done (0.00%)
+0:00 [0 rows, 0B] [0 rows/s, 0B/s]
+```
+
+#### 3.6 MAP相关函数
+```
+presto:default> select map1, value_count(map1, 'a') from (values (map(ARRAY[1,2,3], ARRAY['a', 'b', 'a']))) t(map1);
+      map1       | _col1
+-----------------+-------
+ {1=a, 2=b, 3=a} |     2
+(1 row)
+
+Query 20160721_111906_00011_xgf26, FINISHED, 1 node
 Splits: 1 total, 0 done (0.00%)
 0:00 [0 rows, 0B] [0 rows/s, 0B/s]
 ```
