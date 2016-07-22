@@ -1,4 +1,4 @@
-# presto-third-functions
+# presto-third-functions [![Build Status](https://travis-ci.org/aaronshan/presto-third-functions.svg?branch=master)](https://travis-ci.org/aaronshan/presto-third-functions)
 [Readme in English](https://github.com/aaronshan/presto-third-functions/tree/master/README-en.md)
 
 ## 简介

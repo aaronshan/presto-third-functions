@@ -1,0 +1,22 @@
+language: java
+
+jdk:
+  - oraclejdk8
+  - openjdk8
+
+cache:
+  directories:
+    - $HOME/.m2/repository
+
+script:
+  - jdk_switcher use oraclejdk8
+  - mvn clean package 
+
+  - jdk_switcher use openjdk8
+  - mvn clean package 
+
+before_cache:
+  # Make the cache stable between builds by removing build output
+  - rm -rf $HOME/.m2/repository/cc/shanruifeng
+
+
