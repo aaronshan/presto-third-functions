@@ -20,7 +20,9 @@ mvn clean package
 ```
 mvn clean package -DskipTests
 ```
-执行完命令后,将会生成在target目录下presto-third-functions-0.1.0-shaded.jar`文件.
+执行完命令后,将会生成在target目录下presto-third-functions-{version}-shaded.jar`文件.
+
+> 当前最新版本为`0.2.0`
 
 ## 函数
 ### 1. 字符串相关函数
@@ -87,10 +89,10 @@ mvn clean package -DskipTests
 
 ## 用法
 
-把presto-third-functions-0.1.0-shaded.jar放到 `${presto_home}/plugin/hive-hadoop2` 目录下并重启presto.下面是示例:
+把presto-third-functions-{version}-shaded.jar放到 `${presto_home}/plugin/hive-hadoop2` 目录下并重启presto.下面是示例:
 ### 1. 重启presto
 ```
-mv presto-third-functions-0.1.0-shaded.jar /home/presto/presto-server-0.147/plugin/hive-hadoop2/
+mv presto-third-functions-{version}-shaded.jar /home/presto/presto-server-0.147/plugin/hive-hadoop2/
 cd /home/presto/presto-server-0.147
 bin/launcher restart
 ```

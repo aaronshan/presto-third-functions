@@ -20,8 +20,9 @@ If you want skip unit tests, please run:
 mvn clean package -DskipTests
 ```
 
-It will generate presto-third-functions-0.1.0-shaded.jar in target directory.
+It will generate presto-third-functions-{version}-shaded.jar in target directory.
 
+> current lastest version is `0.2.0`
 ## functions
 
 ### 1. string functions
@@ -69,10 +70,10 @@ It will generate presto-third-functions-0.1.0-shaded.jar in target directory.
 
 ## Use
 
-put presto-third-functions-0.1.0-shaded.jar into `${presto_home}/plugin/hive-hadoop2` and restart presto server. for example:
+put presto-third-functions-{version}-shaded.jar into `${presto_home}/plugin/hive-hadoop2` and restart presto server. for example:
 ### 1. restart presto
 ```
-mv presto-third-functions-0.1.0-shaded.jar /home/presto/presto-server-0.147/plugin/hive-hadoop2/
+mv presto-third-functions-{version}-shaded.jar /home/presto/presto-server-0.147/plugin/hive-hadoop2/
 cd /home/presto/presto-server-0.147
 bin/launcher restart
 ```
