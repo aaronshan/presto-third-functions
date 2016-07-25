@@ -22,6 +22,8 @@ mvn clean package -DskipTests
 ```
 执行完命令后,将会生成在target目录下presto-third-functions-{version}-shaded.jar`文件.
 
+或者也可以直接在[发布页](https://github.com/aaronshan/presto-third-functions/releases)下载.
+
 > 当前最新版本为`0.2.0`
 
 ## 函数

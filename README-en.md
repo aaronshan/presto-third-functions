@@ -1,4 +1,4 @@
-# presto-third-functions
+# presto-third-functions [![Build Status](https://travis-ci.org/aaronshan/presto-third-functions.svg?branch=master)](https://travis-ci.org/aaronshan/presto-third-functions)
 
 ## Introduction
 
@@ -22,7 +22,10 @@ mvn clean package -DskipTests
 
 It will generate presto-third-functions-{version}-shaded.jar in target directory.
 
+You can also directly download file from [release page](https://github.com/aaronshan/presto-third-functions/releases).
+
 > current lastest version is `0.2.0`
+
 ## functions
 
 ### 1. string functions
