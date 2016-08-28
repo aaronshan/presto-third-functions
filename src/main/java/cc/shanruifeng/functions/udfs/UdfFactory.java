@@ -5,6 +5,7 @@ import com.facebook.presto.metadata.FunctionListBuilder;
 import com.facebook.presto.metadata.SqlAggregationFunction;
 import com.facebook.presto.metadata.SqlFunction;
 import com.facebook.presto.operator.aggregation.AggregationFunction;
+import com.facebook.presto.operator.scalar.annotations.ScalarFunction;
 import com.facebook.presto.operator.window.WindowFunction;
 import com.facebook.presto.spi.type.TypeManager;
 import com.google.common.collect.ImmutableList;
@@ -33,7 +34,7 @@ public class UdfFactory implements FunctionFactory {
     }
 
     public List<SqlFunction> listFunctions() {
-        FunctionListBuilder builder = new FunctionListBuilder(typeManager);
+        FunctionListBuilder builder = new FunctionListBuilder();
         try {
             List<Class<?>> classes = getFunctionClasses();
             addFunctions(builder, classes);
@@ -57,7 +58,12 @@ public class UdfFactory implements FunctionFactory {
             } else {
                 if (clazz.getName().startsWith("cc.shanruifeng.functions.udfs.scalar")) {
                     try {
-                        builder.scalar(clazz);
+                        //如果类带有@ScalarFunction注解
+                        if (clazz.isAnnotationPresent(ScalarFunction.class)) {
+                            builder.scalar(clazz);
+                        } else {
+                            builder.scalars(clazz);
+                        }
                     } catch (Exception e) {
                         if (e.getCause() instanceof IllegalAccessException) {
                             // This is alright, must be helper classes

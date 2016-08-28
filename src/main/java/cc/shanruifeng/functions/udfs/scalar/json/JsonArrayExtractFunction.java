@@ -3,7 +3,7 @@ package cc.shanruifeng.functions.udfs.scalar.json;
 import com.facebook.presto.operator.Description;
 import com.facebook.presto.operator.scalar.JsonFunctions;
 import com.facebook.presto.operator.scalar.JsonPath;
-import com.facebook.presto.operator.scalar.ScalarFunction;
+import com.facebook.presto.operator.scalar.annotations.ScalarFunction;
 import com.facebook.presto.spi.block.Block;
 import com.facebook.presto.spi.block.BlockBuilder;
 import com.facebook.presto.spi.block.BlockBuilderStatus;

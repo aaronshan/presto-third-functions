@@ -2,7 +2,7 @@ package cc.shanruifeng.functions.udfs.scalar.date;
 
 import cc.shanruifeng.functions.udfs.utils.ConfigUtils;
 import com.facebook.presto.operator.Description;
-import com.facebook.presto.operator.scalar.ScalarFunction;
+import com.facebook.presto.operator.scalar.annotations.ScalarFunction;
 import com.facebook.presto.spi.type.StandardTypes;
 import com.facebook.presto.type.SqlType;
 import io.airlift.slice.Slice;

@@ -1,7 +1,6 @@
 package cc.shanruifeng.functions.udfs.scalar.string;
 
 import com.facebook.presto.metadata.FunctionListBuilder;
-import com.facebook.presto.type.TypeRegistry;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.airlift.slice.Slice;
 import io.airlift.slice.Slices;
@@ -19,9 +18,8 @@ public class ChinaIdCardFunctionsTest {
 
     @Test
     public void testFunctionCreate() throws Exception {
-        TypeRegistry typeRegistry = new TypeRegistry();
-        FunctionListBuilder builder = new FunctionListBuilder(typeRegistry);
-        builder.scalar(ChinaIdCardFunctions.class);
+        FunctionListBuilder builder = new FunctionListBuilder();
+        builder.scalars(ChinaIdCardFunctions.class);
     }
 
     @Test

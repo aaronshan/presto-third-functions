@@ -6,6 +6,7 @@ import com.facebook.presto.metadata.FunctionRegistry;
 import com.facebook.presto.metadata.OperatorType;
 import com.facebook.presto.spi.block.Block;
 import com.facebook.presto.spi.type.BooleanType;
+import com.facebook.presto.sql.analyzer.FeaturesConfig;
 import com.facebook.presto.type.ArrayType;
 import com.facebook.presto.type.TypeRegistry;
 import com.google.common.collect.ImmutableList;
@@ -34,8 +35,7 @@ import static com.facebook.presto.spi.type.VarcharType.VARCHAR;
 public class MapValueCountFunctionTest {
     @Test
     public void testFunctionCreate() throws Exception {
-        TypeRegistry typeRegistry = new TypeRegistry();
-        FunctionListBuilder builder = new FunctionListBuilder(typeRegistry);
+        FunctionListBuilder builder = new FunctionListBuilder();
         builder.scalar(MapValueCountFunction.class);
     }
 
@@ -51,8 +51,9 @@ public class MapValueCountFunctionTest {
         //construct ARRAY[3L]
         Block valueBlock = arrayBlockOf(INTEGER, 3L);
         TypeRegistry typeManager = new TypeRegistry();
-        FunctionRegistry functionRegistry = new FunctionRegistry(typeManager, new BlockEncodingManager(typeManager), false);
-        FunctionListBuilder builder = new FunctionListBuilder(typeManager);
+        FunctionRegistry functionRegistry = new FunctionRegistry(typeManager, new BlockEncodingManager(typeManager), new FeaturesConfig().setExperimentalSyntaxEnabled(true));
+
+        FunctionListBuilder builder = new FunctionListBuilder();
         functionRegistry.addFunctions(builder.getFunctions());
         MethodHandle equalsMethod = functionRegistry.getScalarFunctionImplementation(internalOperator(OperatorType.EQUAL, BooleanType.BOOLEAN, ImmutableList.of(new ArrayType(INTEGER), new ArrayType(INTEGER)))).getMethodHandle();
         Assert.assertEquals(2, MapValueCountFunction.valueCount(new ArrayType(INTEGER), equalsMethod, mapBlock, valueBlock));
@@ -70,8 +71,8 @@ public class MapValueCountFunctionTest {
         Block mapBlock = mapBlockOf(INTEGER, VARCHAR, value);
 
         TypeRegistry typeManager = new TypeRegistry();
-        FunctionRegistry functionRegistry = new FunctionRegistry(typeManager, new BlockEncodingManager(typeManager), false);
-        FunctionListBuilder builder = new FunctionListBuilder(typeManager);
+        FunctionRegistry functionRegistry = new FunctionRegistry(typeManager, new BlockEncodingManager(typeManager), new FeaturesConfig().setExperimentalSyntaxEnabled(true));
+        FunctionListBuilder builder = new FunctionListBuilder();
         functionRegistry.addFunctions(builder.getFunctions());
         MethodHandle equalsMethod = functionRegistry.getScalarFunctionImplementation(internalOperator(OperatorType.EQUAL, BooleanType.BOOLEAN, ImmutableList.of(VARCHAR, VARCHAR))).getMethodHandle();
         Assert.assertEquals(2, MapValueCountFunction.valueCount(VARCHAR, equalsMethod, mapBlock, Slices.utf8Slice("13")));
@@ -88,8 +89,8 @@ public class MapValueCountFunctionTest {
         Block mapBlock = mapBlockOf(INTEGER, INTEGER, value);
 
         TypeRegistry typeManager = new TypeRegistry();
-        FunctionRegistry functionRegistry = new FunctionRegistry(typeManager, new BlockEncodingManager(typeManager), false);
-        FunctionListBuilder builder = new FunctionListBuilder(typeManager);
+        FunctionRegistry functionRegistry = new FunctionRegistry(typeManager, new BlockEncodingManager(typeManager), new FeaturesConfig().setExperimentalSyntaxEnabled(true));
+        FunctionListBuilder builder = new FunctionListBuilder();
         functionRegistry.addFunctions(builder.getFunctions());
         MethodHandle equalsMethod = functionRegistry.getScalarFunctionImplementation(internalOperator(OperatorType.EQUAL, BooleanType.BOOLEAN, ImmutableList.of(INTEGER, INTEGER))).getMethodHandle();
         Assert.assertEquals(2, MapValueCountFunction.valueCount(INTEGER, equalsMethod, mapBlock, 13L));
@@ -106,8 +107,8 @@ public class MapValueCountFunctionTest {
         Block mapBlock = mapBlockOf(INTEGER, BOOLEAN, value);
 
         TypeRegistry typeManager = new TypeRegistry();
-        FunctionRegistry functionRegistry = new FunctionRegistry(typeManager, new BlockEncodingManager(typeManager), false);
-        FunctionListBuilder builder = new FunctionListBuilder(typeManager);
+        FunctionRegistry functionRegistry = new FunctionRegistry(typeManager, new BlockEncodingManager(typeManager), new FeaturesConfig().setExperimentalSyntaxEnabled(true));
+        FunctionListBuilder builder = new FunctionListBuilder();
         functionRegistry.addFunctions(builder.getFunctions());
         MethodHandle equalsMethod = functionRegistry.getScalarFunctionImplementation(internalOperator(OperatorType.EQUAL, BooleanType.BOOLEAN, ImmutableList.of(BOOLEAN, BOOLEAN))).getMethodHandle();
         Assert.assertEquals(1, MapValueCountFunction.valueCount(BOOLEAN, equalsMethod, mapBlock, false));
@@ -123,8 +124,8 @@ public class MapValueCountFunctionTest {
         Block mapBlock = mapBlockOf(INTEGER, DOUBLE, value);
 
         TypeRegistry typeManager = new TypeRegistry();
-        FunctionRegistry functionRegistry = new FunctionRegistry(typeManager, new BlockEncodingManager(typeManager), false);
-        FunctionListBuilder builder = new FunctionListBuilder(typeManager);
+        FunctionRegistry functionRegistry = new FunctionRegistry(typeManager, new BlockEncodingManager(typeManager), new FeaturesConfig().setExperimentalSyntaxEnabled(true));
+        FunctionListBuilder builder = new FunctionListBuilder();
         functionRegistry.addFunctions(builder.getFunctions());
         MethodHandle equalsMethod = functionRegistry.getScalarFunctionImplementation(internalOperator(OperatorType.EQUAL, BooleanType.BOOLEAN, ImmutableList.of(DOUBLE, DOUBLE))).getMethodHandle();
         Assert.assertEquals(1, MapValueCountFunction.valueCount(DOUBLE, equalsMethod, mapBlock, 2.0));

@@ -7,6 +7,7 @@ import com.facebook.presto.metadata.OperatorType;
 import com.facebook.presto.operator.scalar.JsonPath;
 import com.facebook.presto.spi.block.Block;
 import com.facebook.presto.spi.type.BooleanType;
+import com.facebook.presto.sql.analyzer.FeaturesConfig;
 import com.facebook.presto.type.ArrayType;
 import com.facebook.presto.type.TypeRegistry;
 import com.google.common.collect.ImmutableList;
@@ -29,9 +30,8 @@ import static com.facebook.presto.spi.type.VarcharType.VARCHAR;
 public class JsonArrayExtractFunctionTest {
     @Test
     public void testFunctionCreate() throws Exception {
-        TypeRegistry typeRegistry = new TypeRegistry();
-        FunctionListBuilder builder = new FunctionListBuilder(typeRegistry);
-        builder.scalar(JsonArrayExtractFunction.class);
+        FunctionListBuilder builder = new FunctionListBuilder();
+        builder.scalars(JsonArrayExtractFunction.class);
     }
 
     @Test
@@ -41,8 +41,8 @@ public class JsonArrayExtractFunctionTest {
         Block resultArray = JsonArrayExtractFunction.jsonArrayExtract(inputJson, new JsonPath("$.a.b"));
 
         TypeRegistry typeManager = new TypeRegistry();
-        FunctionRegistry functionRegistry = new FunctionRegistry(typeManager, new BlockEncodingManager(typeManager), false);
-        FunctionListBuilder builder = new FunctionListBuilder(typeManager);
+        FunctionRegistry functionRegistry = new FunctionRegistry(typeManager, new BlockEncodingManager(typeManager), new FeaturesConfig().setExperimentalSyntaxEnabled(true));
+        FunctionListBuilder builder = new FunctionListBuilder();
         functionRegistry.addFunctions(builder.getFunctions());
         MethodHandle equalsMethod = functionRegistry.getScalarFunctionImplementation(internalOperator(OperatorType.EQUAL, BooleanType.BOOLEAN, ImmutableList.of(new ArrayType(VARCHAR), new ArrayType(VARCHAR)))).getMethodHandle();
         Assert.assertEquals(true, (boolean) equalsMethod.invokeExact(resultArray, expectArray));

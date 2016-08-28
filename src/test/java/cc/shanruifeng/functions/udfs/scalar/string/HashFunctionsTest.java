@@ -1,7 +1,6 @@
 package cc.shanruifeng.functions.udfs.scalar.string;
 
 import com.facebook.presto.metadata.FunctionListBuilder;
-import com.facebook.presto.type.TypeRegistry;
 import io.airlift.slice.Slice;
 import io.airlift.slice.Slices;
 import org.junit.Assert;
@@ -16,9 +15,8 @@ public class HashFunctionsTest {
 
     @Test
     public void testFunctionCreate() throws Exception {
-        TypeRegistry typeRegistry = new TypeRegistry();
-        FunctionListBuilder builder = new FunctionListBuilder(typeRegistry);
-        builder.scalar(HashFunctions.class);
+        FunctionListBuilder builder = new FunctionListBuilder();
+        builder.scalars(HashFunctions.class);
     }
 
     @Test

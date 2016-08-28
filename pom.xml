@@ -6,7 +6,7 @@
 
     <groupId>cc.shanruifeng</groupId>
     <artifactId>presto-third-functions</artifactId>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -14,7 +14,7 @@
         <project.report.outputEncoding>UTF-8</project.report.outputEncoding>
         <project.report.inputEncoding>UTF-8</project.report.inputEncoding>
 
-        <presto.version>0.147</presto.version>
+        <presto.version>0.150</presto.version>
         <pinyin4j.version>2.5.0</pinyin4j.version>
         <commons-codec.version>1.10</commons-codec.version>
         <junit.version>4.12</junit.version>

@@ -3,7 +3,7 @@ package cc.shanruifeng.functions.udfs.scalar.string;
 import cc.shanruifeng.functions.udfs.model.ChinaIdArea;
 import cc.shanruifeng.functions.udfs.utils.ConfigUtils;
 import com.facebook.presto.operator.Description;
-import com.facebook.presto.operator.scalar.ScalarFunction;
+import com.facebook.presto.operator.scalar.annotations.ScalarFunction;
 import com.facebook.presto.spi.type.StandardTypes;
 import com.facebook.presto.type.SqlType;
 import com.fasterxml.jackson.core.JsonProcessingException;

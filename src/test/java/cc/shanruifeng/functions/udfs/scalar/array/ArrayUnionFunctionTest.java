@@ -5,9 +5,8 @@ import com.facebook.presto.metadata.FunctionListBuilder;
 import com.facebook.presto.metadata.FunctionRegistry;
 import com.facebook.presto.metadata.OperatorType;
 import com.facebook.presto.spi.block.Block;
-import com.facebook.presto.spi.block.BlockBuilder;
-import com.facebook.presto.spi.block.BlockBuilderStatus;
 import com.facebook.presto.spi.type.BooleanType;
+import com.facebook.presto.sql.analyzer.FeaturesConfig;
 import com.facebook.presto.type.ArrayType;
 import com.facebook.presto.type.TypeRegistry;
 import com.google.common.collect.ImmutableList;
@@ -22,15 +21,14 @@ import static com.facebook.presto.spi.type.BigintType.BIGINT;
 import static com.facebook.presto.spi.type.VarcharType.VARCHAR;
 
 /**
- * @author ruifeng.shan
+ * @author ruifeng.shanw
  * @date 2016-07-13
  * @time 11:01
  */
 public class ArrayUnionFunctionTest {
     @Test
     public void testFunctionCreate() throws Exception {
-        TypeRegistry typeRegistry = new TypeRegistry();
-        FunctionListBuilder builder = new FunctionListBuilder(typeRegistry);
+        FunctionListBuilder builder = new FunctionListBuilder();
         builder.scalar(ArrayUnionFunction.class);
     }
 
@@ -45,8 +43,8 @@ public class ArrayUnionFunctionTest {
 
         Block resultArray = ArrayUnionFunction.union(VARCHAR, leftArray, rightArray);
         TypeRegistry typeManager = new TypeRegistry();
-        FunctionRegistry functionRegistry = new FunctionRegistry(typeManager, new BlockEncodingManager(typeManager), false);
-        FunctionListBuilder builder = new FunctionListBuilder(typeManager);
+        FunctionRegistry functionRegistry = new FunctionRegistry(typeManager, new BlockEncodingManager(typeManager), new FeaturesConfig().setExperimentalSyntaxEnabled(true));
+        FunctionListBuilder builder = new FunctionListBuilder();
         functionRegistry.addFunctions(builder.getFunctions());
         MethodHandle equalsMethod = functionRegistry.getScalarFunctionImplementation(internalOperator(OperatorType.EQUAL, BooleanType.BOOLEAN, ImmutableList.of(new ArrayType(VARCHAR), new ArrayType(VARCHAR)))).getMethodHandle();
         Assert.assertEquals(3, resultArray.getPositionCount());
@@ -61,8 +59,8 @@ public class ArrayUnionFunctionTest {
 
         Block resultArray = ArrayUnionFunction.bigintUnion(leftArray, rightArray);
         TypeRegistry typeManager = new TypeRegistry();
-        FunctionRegistry functionRegistry = new FunctionRegistry(typeManager, new BlockEncodingManager(typeManager), false);
-        FunctionListBuilder builder = new FunctionListBuilder(typeManager);
+        FunctionRegistry functionRegistry = new FunctionRegistry(typeManager, new BlockEncodingManager(typeManager), new FeaturesConfig().setExperimentalSyntaxEnabled(true));
+        FunctionListBuilder builder = new FunctionListBuilder();
         functionRegistry.addFunctions(builder.getFunctions());
         MethodHandle equalsMethod = functionRegistry.getScalarFunctionImplementation(internalOperator(OperatorType.EQUAL, BooleanType.BOOLEAN, ImmutableList.of(new ArrayType(BIGINT), new ArrayType(BIGINT)))).getMethodHandle();
         Assert.assertEquals(3, resultArray.getPositionCount());

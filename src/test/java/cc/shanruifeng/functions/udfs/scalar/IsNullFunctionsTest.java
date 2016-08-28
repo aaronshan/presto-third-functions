@@ -3,7 +3,6 @@ package cc.shanruifeng.functions.udfs.scalar;
 import com.facebook.presto.metadata.FunctionListBuilder;
 import com.facebook.presto.spi.block.BlockBuilder;
 import com.facebook.presto.spi.block.BlockBuilderStatus;
-import com.facebook.presto.type.TypeRegistry;
 import io.airlift.slice.Slices;
 import org.junit.Assert;
 import org.junit.Test;
@@ -19,8 +18,7 @@ public class IsNullFunctionsTest {
 
     @Test
     public void testFunctionCreate() throws Exception {
-        TypeRegistry typeRegistry = new TypeRegistry();
-        FunctionListBuilder builder = new FunctionListBuilder(typeRegistry);
+        FunctionListBuilder builder = new FunctionListBuilder();
         builder.scalar(IsNullFunctions.class);
     }
 

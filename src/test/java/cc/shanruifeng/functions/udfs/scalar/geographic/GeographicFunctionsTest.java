@@ -1,7 +1,6 @@
 package cc.shanruifeng.functions.udfs.scalar.geographic;
 
 import com.facebook.presto.metadata.FunctionListBuilder;
-import com.facebook.presto.type.TypeRegistry;
 import org.junit.Test;
 
 /**
@@ -12,8 +11,7 @@ import org.junit.Test;
 public class GeographicFunctionsTest {
     @Test
     public void testFunctionCreate() throws Exception {
-        TypeRegistry typeRegistry = new TypeRegistry();
-        FunctionListBuilder builder = new FunctionListBuilder(typeRegistry);
-        builder.scalar(GeographicFunctions.class);
+        FunctionListBuilder builder = new FunctionListBuilder();
+        builder.scalars(GeographicFunctions.class);
     }
 }

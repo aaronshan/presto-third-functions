@@ -24,7 +24,7 @@ It will generate presto-third-functions-{version}-shaded.jar in target directory
 
 You can also directly download file from [release page](https://github.com/aaronshan/presto-third-functions/releases).
 
-> current lastest version is `0.2.0`
+> current last version is `0.3.0`, support `presto-0.150+`, If you presto's version <=`0.150`, please use `0.2.0`.
 
 ## functions
 
@@ -42,6 +42,8 @@ You can also directly download file from [release page](https://github.com/aaron
 |value_count(array(T), T value) -> int | count ARRAY's element number that element value equals given value.|
 
 > I had already proposed a [pull request](https://github.com/prestodb/presto/pull/5644#event-729329053) about `array_union`. Currently, it be merged to presto master branch. So, If your presto version > 0.151, it already include array_union function.
+
+To support `presto-0.150+`, `0.3.0` rename `array_union` to `arr_union`
 
 ### 3. date functions
 | function| description |

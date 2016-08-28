@@ -1,7 +1,6 @@
 package cc.shanruifeng.functions.udfs.scalar.date;
 
 import com.facebook.presto.metadata.FunctionListBuilder;
-import com.facebook.presto.type.TypeRegistry;
 import io.airlift.slice.Slices;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -15,9 +14,8 @@ public class DayOfWeekFunctionsTest {
 
     @Test
     public void testFunctionCreate() throws Exception {
-        TypeRegistry typeRegistry = new TypeRegistry();
-        FunctionListBuilder builder = new FunctionListBuilder(typeRegistry);
-        builder.scalar(DayOfWeekFunctions.class);
+        FunctionListBuilder builder = new FunctionListBuilder();
+        builder.scalars(DayOfWeekFunctions.class);
     }
 
     @Test

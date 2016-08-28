@@ -2,8 +2,8 @@ package cc.shanruifeng.functions.udfs.scalar.array;
 
 import com.facebook.presto.operator.Description;
 import com.facebook.presto.operator.aggregation.TypedSet;
-import com.facebook.presto.operator.scalar.ScalarFunction;
-import com.facebook.presto.operator.scalar.TypeParameter;
+import com.facebook.presto.operator.scalar.annotations.ScalarFunction;
+import com.facebook.presto.operator.scalar.annotations.TypeParameter;
 import com.facebook.presto.spi.block.Block;
 import com.facebook.presto.spi.block.BlockBuilder;
 import com.facebook.presto.spi.block.BlockBuilderStatus;
@@ -21,7 +21,7 @@ import static com.facebook.presto.spi.type.BigintType.BIGINT;
  * @date 2016-07-13
  * @time 10:19
  */
-@ScalarFunction("array_union")
+@ScalarFunction("arr_union")
 @Description("Union elements of the two given arrays")
 public class ArrayUnionFunction {
     @TypeParameter("E")

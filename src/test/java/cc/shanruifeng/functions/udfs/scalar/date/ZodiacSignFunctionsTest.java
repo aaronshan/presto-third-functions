@@ -1,7 +1,6 @@
 package cc.shanruifeng.functions.udfs.scalar.date;
 
 import com.facebook.presto.metadata.FunctionListBuilder;
-import com.facebook.presto.type.TypeRegistry;
 import io.airlift.slice.Slice;
 import io.airlift.slice.Slices;
 import junit.framework.Assert;
@@ -16,9 +15,8 @@ public class ZodiacSignFunctionsTest {
 
     @Test
     public void testFunctionCreate() throws Exception {
-        TypeRegistry typeRegistry = new TypeRegistry();
-        FunctionListBuilder builder = new FunctionListBuilder(typeRegistry);
-        builder.scalar(ZodiacSignFunctions.class);
+        FunctionListBuilder builder = new FunctionListBuilder();
+        builder.scalars(ZodiacSignFunctions.class);
     }
 
     @Test

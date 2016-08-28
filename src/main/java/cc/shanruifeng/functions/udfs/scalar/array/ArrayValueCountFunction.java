@@ -1,9 +1,9 @@
 package cc.shanruifeng.functions.udfs.scalar.array;
 
 import com.facebook.presto.operator.Description;
-import com.facebook.presto.operator.scalar.OperatorDependency;
-import com.facebook.presto.operator.scalar.ScalarFunction;
-import com.facebook.presto.operator.scalar.TypeParameter;
+import com.facebook.presto.operator.scalar.annotations.OperatorDependency;
+import com.facebook.presto.operator.scalar.annotations.ScalarFunction;
+import com.facebook.presto.operator.scalar.annotations.TypeParameter;
 import com.facebook.presto.spi.PrestoException;
 import com.facebook.presto.spi.StandardErrorCode;
 import com.facebook.presto.spi.block.Block;
@@ -49,7 +49,7 @@ public class ArrayValueCountFunction {
                     Throwables.propagateIfInstanceOf(t, Error.class);
                     Throwables.propagateIfInstanceOf(t, PrestoException.class);
 
-                    throw new PrestoException(StandardErrorCode.INTERNAL_ERROR, t);
+                    throw new PrestoException(StandardErrorCode.FUNCTION_IMPLEMENTATION_ERROR, t);
                 }
             }
         }
@@ -80,7 +80,7 @@ public class ArrayValueCountFunction {
                     Throwables.propagateIfInstanceOf(t, Error.class);
                     Throwables.propagateIfInstanceOf(t, PrestoException.class);
 
-                    throw new PrestoException(StandardErrorCode.INTERNAL_ERROR, t);
+                    throw new PrestoException(StandardErrorCode.FUNCTION_IMPLEMENTATION_ERROR, t);
                 }
             }
         }
@@ -111,7 +111,7 @@ public class ArrayValueCountFunction {
                     Throwables.propagateIfInstanceOf(t, Error.class);
                     Throwables.propagateIfInstanceOf(t, PrestoException.class);
 
-                    throw new PrestoException(StandardErrorCode.INTERNAL_ERROR, t);
+                    throw new PrestoException(StandardErrorCode.FUNCTION_IMPLEMENTATION_ERROR, t);
                 }
             }
         }
@@ -142,7 +142,7 @@ public class ArrayValueCountFunction {
                     Throwables.propagateIfInstanceOf(t, Error.class);
                     Throwables.propagateIfInstanceOf(t, PrestoException.class);
 
-                    throw new PrestoException(StandardErrorCode.INTERNAL_ERROR, t);
+                    throw new PrestoException(StandardErrorCode.FUNCTION_IMPLEMENTATION_ERROR, t);
                 }
             }
         }
@@ -173,7 +173,7 @@ public class ArrayValueCountFunction {
                     Throwables.propagateIfInstanceOf(t, Error.class);
                     Throwables.propagateIfInstanceOf(t, PrestoException.class);
 
-                    throw new PrestoException(StandardErrorCode.INTERNAL_ERROR, t);
+                    throw new PrestoException(StandardErrorCode.FUNCTION_IMPLEMENTATION_ERROR, t);
                 }
             }
         }
