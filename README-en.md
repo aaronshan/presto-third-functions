@@ -24,7 +24,7 @@ It will generate presto-third-functions-{version}-shaded.jar in target directory
 
 You can also directly download file from [release page](https://github.com/aaronshan/presto-third-functions/releases).
 
-> current last version is `0.3.0`, support `presto-0.150+`, If you presto's version <=`0.150`, please use `0.2.0`.
+> current last version is `0.3.0`, support `presto-0.150+`, If you presto's version <`0.150`, please use `0.2.0`.
 
 ## functions
 
