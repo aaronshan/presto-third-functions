@@ -3,8 +3,8 @@ package cc.shanruifeng.functions.udfs.scalar.array;
 import com.facebook.presto.block.BlockEncodingManager;
 import com.facebook.presto.metadata.FunctionListBuilder;
 import com.facebook.presto.metadata.FunctionRegistry;
-import com.facebook.presto.metadata.OperatorType;
 import com.facebook.presto.spi.block.Block;
+import com.facebook.presto.spi.function.OperatorType;
 import com.facebook.presto.spi.type.BooleanType;
 import com.facebook.presto.sql.analyzer.FeaturesConfig;
 import com.facebook.presto.type.ArrayType;
@@ -43,7 +43,7 @@ public class ArrayUnionFunctionTest {
 
         Block resultArray = ArrayUnionFunction.union(VARCHAR, leftArray, rightArray);
         TypeRegistry typeManager = new TypeRegistry();
-        FunctionRegistry functionRegistry = new FunctionRegistry(typeManager, new BlockEncodingManager(typeManager), new FeaturesConfig().setExperimentalSyntaxEnabled(true));
+        FunctionRegistry functionRegistry = new FunctionRegistry(typeManager, new BlockEncodingManager(typeManager), new FeaturesConfig());
         FunctionListBuilder builder = new FunctionListBuilder();
         functionRegistry.addFunctions(builder.getFunctions());
         MethodHandle equalsMethod = functionRegistry.getScalarFunctionImplementation(internalOperator(OperatorType.EQUAL, BooleanType.BOOLEAN, ImmutableList.of(new ArrayType(VARCHAR), new ArrayType(VARCHAR)))).getMethodHandle();
@@ -59,7 +59,7 @@ public class ArrayUnionFunctionTest {
 
         Block resultArray = ArrayUnionFunction.bigintUnion(leftArray, rightArray);
         TypeRegistry typeManager = new TypeRegistry();
-        FunctionRegistry functionRegistry = new FunctionRegistry(typeManager, new BlockEncodingManager(typeManager), new FeaturesConfig().setExperimentalSyntaxEnabled(true));
+        FunctionRegistry functionRegistry = new FunctionRegistry(typeManager, new BlockEncodingManager(typeManager), new FeaturesConfig());
         FunctionListBuilder builder = new FunctionListBuilder();
         functionRegistry.addFunctions(builder.getFunctions());
         MethodHandle equalsMethod = functionRegistry.getScalarFunctionImplementation(internalOperator(OperatorType.EQUAL, BooleanType.BOOLEAN, ImmutableList.of(new ArrayType(BIGINT), new ArrayType(BIGINT)))).getMethodHandle();

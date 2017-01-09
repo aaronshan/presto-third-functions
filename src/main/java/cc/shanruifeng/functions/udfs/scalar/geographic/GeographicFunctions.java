@@ -1,9 +1,9 @@
 package cc.shanruifeng.functions.udfs.scalar.geographic;
 
-import com.facebook.presto.operator.Description;
-import com.facebook.presto.operator.scalar.annotations.ScalarFunction;
+import com.facebook.presto.spi.function.Description;
+import com.facebook.presto.spi.function.ScalarFunction;
+import com.facebook.presto.spi.function.SqlType;
 import com.facebook.presto.spi.type.StandardTypes;
-import com.facebook.presto.type.SqlType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;

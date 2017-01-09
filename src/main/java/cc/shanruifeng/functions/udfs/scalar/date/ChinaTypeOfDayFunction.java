@@ -1,10 +1,11 @@
 package cc.shanruifeng.functions.udfs.scalar.date;
 
+import cc.shanruifeng.functions.udfs.model.DayType;
 import cc.shanruifeng.functions.udfs.utils.ConfigUtils;
-import com.facebook.presto.operator.Description;
-import com.facebook.presto.operator.scalar.annotations.ScalarFunction;
+import com.facebook.presto.spi.function.Description;
+import com.facebook.presto.spi.function.ScalarFunction;
+import com.facebook.presto.spi.function.SqlType;
 import com.facebook.presto.spi.type.StandardTypes;
-import com.facebook.presto.type.SqlType;
 import io.airlift.slice.Slice;
 import io.airlift.slice.Slices;
 import org.joda.time.LocalDate;
@@ -26,19 +27,6 @@ import static java.util.concurrent.TimeUnit.DAYS;
 public class ChinaTypeOfDayFunction {
     public final static DateTimeFormatter DEFAULT_DATE_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd");
     public final static Map<String, String> dayMap = ConfigUtils.getDayMap();
-
-    private enum DayType {
-        HOLIDAY("holiday"), WORKDAY("workday");
-
-        private String code;
-        private DayType(String code) {
-            this.code = code;
-        }
-
-        public String getCode() {
-            return this.code;
-        }
-    }
 
     @ScalarFunction("typeOfDay")
     @Description("Returns the type of day from a date string(yyyy-MM-dd)")

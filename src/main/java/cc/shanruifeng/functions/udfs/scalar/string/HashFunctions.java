@@ -1,9 +1,9 @@
 package cc.shanruifeng.functions.udfs.scalar.string;
 
-import com.facebook.presto.operator.Description;
-import com.facebook.presto.operator.scalar.annotations.ScalarFunction;
+import com.facebook.presto.spi.function.Description;
+import com.facebook.presto.spi.function.ScalarFunction;
+import com.facebook.presto.spi.function.SqlType;
 import com.facebook.presto.spi.type.StandardTypes;
-import com.facebook.presto.type.SqlType;
 import io.airlift.slice.Slice;
 import io.airlift.slice.Slices;
 import org.apache.commons.codec.digest.DigestUtils;

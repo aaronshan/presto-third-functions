@@ -1,15 +1,15 @@
 package cc.shanruifeng.functions.udfs.scalar.json;
 
-import com.facebook.presto.operator.Description;
 import com.facebook.presto.operator.scalar.JsonFunctions;
 import com.facebook.presto.operator.scalar.JsonPath;
-import com.facebook.presto.operator.scalar.annotations.ScalarFunction;
 import com.facebook.presto.spi.block.Block;
 import com.facebook.presto.spi.block.BlockBuilder;
 import com.facebook.presto.spi.block.BlockBuilderStatus;
+import com.facebook.presto.spi.function.Description;
+import com.facebook.presto.spi.function.ScalarFunction;
+import com.facebook.presto.spi.function.SqlType;
 import com.facebook.presto.spi.type.StandardTypes;
 import com.facebook.presto.type.JsonPathType;
-import com.facebook.presto.type.SqlType;
 import io.airlift.slice.Slice;
 
 import static com.facebook.presto.spi.type.VarcharType.VARCHAR;

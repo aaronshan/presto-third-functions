@@ -1,9 +1,10 @@
 package cc.shanruifeng.functions.udfs.scalar.date;
 
-import com.facebook.presto.operator.Description;
-import com.facebook.presto.operator.scalar.annotations.ScalarFunction;
+import cc.shanruifeng.functions.udfs.model.Language;
+import com.facebook.presto.spi.function.Description;
+import com.facebook.presto.spi.function.ScalarFunction;
+import com.facebook.presto.spi.function.SqlType;
 import com.facebook.presto.spi.type.StandardTypes;
-import com.facebook.presto.type.SqlType;
 import io.airlift.slice.Slice;
 import io.airlift.slice.Slices;
 import org.joda.time.LocalDate;
@@ -22,7 +23,6 @@ import static java.util.concurrent.TimeUnit.DAYS;
 public class ZodiacSignFunctions {
     public final static DateTimeFormatter DEFAULT_DATE_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd");
 
-    ;
     private static final String[] zodiacCnArray = {"魔羯座", "水瓶座", "双鱼座", "白羊座", "金牛座", "双子座", "巨蟹座", "狮子座", "处女座", "天秤座", "天蝎座", "射手座"};
     private static final String[] zodiacEnArray = {"Capricorn", "Aquarius", "Pisces", "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius"};
 
@@ -36,7 +36,7 @@ public class ZodiacSignFunctions {
 
         try {
             LocalDate date = LocalDate.parse(string.toStringUtf8(), DEFAULT_DATE_FORMATTER);
-            String zodiac = getZodiac(date.getMonthOfYear(), date.getDayOfMonth(), language.CN);
+            String zodiac = getZodiac(date.getMonthOfYear(), date.getDayOfMonth(), Language.CN);
             return Slices.utf8Slice(zodiac);
         } catch (Exception e) {
             return null;
@@ -51,7 +51,7 @@ public class ZodiacSignFunctions {
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(DAYS.toMillis(t));
             LocalDate date = LocalDate.fromCalendarFields(calendar);
-            String zodiac = getZodiac(date.getMonthOfYear(), date.getDayOfMonth(), language.CN);
+            String zodiac = getZodiac(date.getMonthOfYear(), date.getDayOfMonth(), Language.CN);
             return Slices.utf8Slice(zodiac);
         } catch (Exception e) {
             return null;
@@ -68,7 +68,7 @@ public class ZodiacSignFunctions {
 
         try {
             LocalDate date = LocalDate.parse(string.toStringUtf8(), DEFAULT_DATE_FORMATTER);
-            String zodiac = getZodiac(date.getMonthOfYear(), date.getDayOfMonth(), language.EN);
+            String zodiac = getZodiac(date.getMonthOfYear(), date.getDayOfMonth(), Language.EN);
             return Slices.utf8Slice(zodiac);
         } catch (Exception e) {
             return null;
@@ -83,14 +83,14 @@ public class ZodiacSignFunctions {
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(DAYS.toMillis(t));
             LocalDate date = LocalDate.fromCalendarFields(calendar);
-            String zodiac = getZodiac(date.getMonthOfYear(), date.getDayOfMonth(), language.EN);
+            String zodiac = getZodiac(date.getMonthOfYear(), date.getDayOfMonth(), Language.EN);
             return Slices.utf8Slice(zodiac);
         } catch (Exception e) {
             return null;
         }
     }
 
-    private static String getZodiac(int month, int day, language language) {
+    private static String getZodiac(int month, int day, Language language) {
         int[] splitDay = {19, 18, 20, 20, 20, 21, 22, 22, 22, 22, 21, 21}; // split day of two zodiac
         int index = month;
         // if date before the spilt day, idx -1; else idx not changed
@@ -100,13 +100,11 @@ public class ZodiacSignFunctions {
             index = 0;
         }
         // return index's zodiac string
-        if (language == ZodiacSignFunctions.language.CN) {
+        if (language == Language.CN) {
             return zodiacCnArray[index];
         } else {
             return zodiacEnArray[index];
         }
 
     }
-
-    private enum language {CN, EN}
 }

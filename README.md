@@ -10,7 +10,7 @@
 * Java 8 Update 60 及以上
 * Maven 3.3.9+
 
-### 命令:
+### 命令
 ```
 cd ${project_home}
 mvn clean package
@@ -24,7 +24,12 @@ mvn clean package -DskipTests
 
 或者也可以直接在[发布页](https://github.com/aaronshan/presto-third-functions/releases)下载.
 
-> 当前最新版本为`0.3.0`, 支持`presto-0.150+`,如果你使用的presto版本低于`0.150`,继续使用`0.2.0`即可。
+### 版本说明
+| 版本 | 说明 |
+|:--|:--|
+| `0.2.0` | 支持`presto-0.147`~`presto-0.149`|
+| `0.3.0` | 支持`presto-0.150`~`presto-0.151`|
+| `0.4.0` | 支持`presto-0.152`|
 
 ## 函数
 ### 1. 字符串相关函数
@@ -50,7 +55,7 @@ mvn clean package -DskipTests
 
 > 我已经发起了一个`array_union`的[PR](https://github.com/prestodb/presto/pull/5644#event-729329053), 现在它已经被合并到presto的master分支中. 因此,如果你的presto版本 > 0.151,它已经包含了`array_union`函数.
 
-`0.3.0`版本为了兼容`presto-0.150`版本,也为了防止和`presto-0.151+`命名冲突,将该方法改名为arr_union
+`0.3.0`版本以后为了兼容`presto-0.150`版本,也为了防止和`presto-0.151+`命名冲突,将该方法改名为arr_union
 
 ### 4. JSON相关函数
 | 函数| 说明|

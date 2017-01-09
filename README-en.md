@@ -24,7 +24,12 @@ It will generate presto-third-functions-{version}-shaded.jar in target directory
 
 You can also directly download file from [release page](https://github.com/aaronshan/presto-third-functions/releases).
 
-> current last version is `0.3.0`, support `presto-0.150+`, If you presto's version <`0.150`, please use `0.2.0`.
+### version description
+| version | description |
+|:--|:--|
+| `0.2.0` | support `presto-0.147`~`presto-0.149`|
+| `0.3.0` | support `presto-0.150`~`presto-0.151`|
+| `0.4.0` | support `presto-0.152`|
 
 ## functions
 
@@ -43,7 +48,7 @@ You can also directly download file from [release page](https://github.com/aaron
 
 > I had already proposed a [pull request](https://github.com/prestodb/presto/pull/5644#event-729329053) about `array_union`. Currently, it be merged to presto master branch. So, If your presto version > 0.151, it already include array_union function.
 
-To support `presto-0.150+`, `0.3.0` rename `array_union` to `arr_union`
+To support `presto-0.150+`, from `0.3.0`, it had rename to `arr_union`
 
 ### 3. date functions
 | function| description |
