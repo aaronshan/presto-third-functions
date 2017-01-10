@@ -30,6 +30,7 @@ You can also directly download file from [release page](https://github.com/aaron
 | `0.2.0` | support `presto-0.147`~`presto-0.149`|
 | `0.3.0` | support `presto-0.150`~`presto-0.151`|
 | `0.4.0` | support `presto-0.152`|
+| `0.5.0` | support `presto-0.153`~`presto-0.161`|
 
 ## functions
 
@@ -48,7 +49,7 @@ You can also directly download file from [release page](https://github.com/aaron
 
 > I had already proposed a [pull request](https://github.com/prestodb/presto/pull/5644#event-729329053) about `array_union`. Currently, it be merged to presto master branch. So, If your presto version > 0.151, it already include array_union function.
 
-To support `presto-0.150+`, from `0.3.0`, it had rename to `arr_union`
+To support `presto-0.150+`, from `0.3.0`, it had rename to `arr_union`. (from `0.5.0`, I had delete `arr_union` function, please use `array_union`.)
 
 ### 3. date functions
 | function| description |

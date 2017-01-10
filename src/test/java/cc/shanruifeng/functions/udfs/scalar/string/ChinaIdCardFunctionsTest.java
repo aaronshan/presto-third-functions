@@ -4,10 +4,9 @@ import com.facebook.presto.metadata.FunctionListBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.airlift.slice.Slice;
 import io.airlift.slice.Slices;
+import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.Map;
 
 /**
  * @author ruifeng.shan

@@ -6,15 +6,15 @@ import com.facebook.presto.spi.block.Block;
 import com.facebook.presto.spi.function.Description;
 import com.facebook.presto.spi.function.OperatorDependency;
 import com.facebook.presto.spi.function.ScalarFunction;
+import com.facebook.presto.spi.function.SqlNullable;
 import com.facebook.presto.spi.function.SqlType;
 import com.facebook.presto.spi.function.TypeParameter;
 import com.facebook.presto.spi.type.StandardTypes;
 import com.facebook.presto.spi.type.Type;
 import com.google.common.base.Throwables;
 import io.airlift.slice.Slice;
-
-import javax.annotation.Nullable;
 import java.lang.invoke.MethodHandle;
+import javax.annotation.Nullable;
 
 import static com.facebook.presto.spi.function.OperatorType.EQUAL;
 
@@ -33,7 +33,7 @@ public class MapValueCountFunction {
     public static long valueCount(@TypeParameter("V") Type valueType,
                                   @OperatorDependency(operator = EQUAL, returnType = StandardTypes.BOOLEAN, argumentTypes = {"V", "V"}) MethodHandle equals,
                                   @SqlType("map(K,V)") Block mapBlock,
-                                  @Nullable @SqlType("V") Block value) {
+                                  @Nullable @SqlNullable @SqlType("V") Block value) {
         int count = 0;
         if (mapBlock.getPositionCount() > 0) {
             for (int i = 0; i < mapBlock.getPositionCount(); i += 2) {
@@ -66,7 +66,7 @@ public class MapValueCountFunction {
     public static long valueCount(@TypeParameter("V") Type valueType,
                                   @OperatorDependency(operator = EQUAL, returnType = StandardTypes.BOOLEAN, argumentTypes = {"V", "V"}) MethodHandle equals,
                                   @SqlType("map(K,V)") Block mapBlock,
-                                  @Nullable @SqlType("V") Slice value) {
+                                  @Nullable @SqlNullable @SqlType("V") Slice value) {
         int count = 0;
         if (mapBlock.getPositionCount() > 0) {
             for (int i = 0; i < mapBlock.getPositionCount(); i += 2) {
@@ -99,7 +99,7 @@ public class MapValueCountFunction {
     public static long valueCount(@TypeParameter("V") Type valueType,
                                   @OperatorDependency(operator = EQUAL, returnType = StandardTypes.BOOLEAN, argumentTypes = {"V", "V"}) MethodHandle equals,
                                   @SqlType("map(K,V)") Block mapBlock,
-                                  @Nullable @SqlType("V") Long value) {
+                                  @Nullable @SqlNullable @SqlType("V") Long value) {
         int count = 0;
         if (mapBlock.getPositionCount() > 0) {
             for (int i = 0; i < mapBlock.getPositionCount(); i += 2) {
@@ -132,7 +132,7 @@ public class MapValueCountFunction {
     public static long valueCount(@TypeParameter("V") Type valueType,
                                   @OperatorDependency(operator = EQUAL, returnType = StandardTypes.BOOLEAN, argumentTypes = {"V", "V"}) MethodHandle equals,
                                   @SqlType("map(K,V)") Block mapBlock,
-                                  @Nullable @SqlType("V") Boolean value) {
+                                  @Nullable @SqlNullable @SqlType("V") Boolean value) {
         int count = 0;
         System.out.println(mapBlock.getPositionCount());
         if (mapBlock.getPositionCount() > 0) {
@@ -166,7 +166,7 @@ public class MapValueCountFunction {
     public static long valueCount(@TypeParameter("V") Type valueType,
                                   @OperatorDependency(operator = EQUAL, returnType = StandardTypes.BOOLEAN, argumentTypes = {"V", "V"}) MethodHandle equals,
                                   @SqlType("map(K,V)") Block mapBlock,
-                                  @Nullable @SqlType("V") Double value) {
+                                  @Nullable @SqlNullable @SqlType("V") Double value) {
         int count = 0;
         if (mapBlock.getPositionCount() > 0) {
             for (int i = 0; i < mapBlock.getPositionCount(); i += 2) {

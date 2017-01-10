@@ -1,7 +1,6 @@
 package cc.shanruifeng.functions.udfs;
 
 import com.facebook.presto.spi.type.Type;
-
 import java.util.List;
 
 /**

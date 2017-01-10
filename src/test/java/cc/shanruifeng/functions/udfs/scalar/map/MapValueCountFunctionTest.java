@@ -13,11 +13,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import io.airlift.slice.Slice;
 import io.airlift.slice.Slices;
-import junit.framework.Assert;
-import org.junit.Test;
-
 import java.lang.invoke.MethodHandle;
 import java.util.Map;
+import junit.framework.Assert;
+import org.junit.Test;
 
 import static cc.shanruifeng.functions.udfs.scalar.StructuralTestUtil.arrayBlockOf;
 import static cc.shanruifeng.functions.udfs.scalar.StructuralTestUtil.mapBlockOf;

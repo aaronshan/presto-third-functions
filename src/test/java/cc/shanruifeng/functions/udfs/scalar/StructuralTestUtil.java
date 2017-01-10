@@ -6,7 +6,6 @@ import com.facebook.presto.spi.block.BlockBuilderStatus;
 import com.facebook.presto.spi.block.InterleavedBlockBuilder;
 import com.facebook.presto.spi.type.Type;
 import com.google.common.collect.ImmutableList;
-
 import java.util.Map;
 
 import static com.facebook.presto.type.TypeJsonUtils.appendToBlockBuilder;

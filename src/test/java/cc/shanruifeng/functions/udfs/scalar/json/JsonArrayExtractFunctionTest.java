@@ -3,7 +3,6 @@ package cc.shanruifeng.functions.udfs.scalar.json;
 import com.facebook.presto.block.BlockEncodingManager;
 import com.facebook.presto.metadata.FunctionListBuilder;
 import com.facebook.presto.metadata.FunctionRegistry;
-import com.facebook.presto.operator.scalar.JsonPath;
 import com.facebook.presto.spi.block.Block;
 import com.facebook.presto.spi.function.OperatorType;
 import com.facebook.presto.spi.type.BooleanType;
@@ -13,10 +12,9 @@ import com.facebook.presto.type.TypeRegistry;
 import com.google.common.collect.ImmutableList;
 import io.airlift.slice.Slice;
 import io.airlift.slice.Slices;
+import java.lang.invoke.MethodHandle;
 import junit.framework.Assert;
 import org.junit.Test;
-
-import java.lang.invoke.MethodHandle;
 
 import static cc.shanruifeng.functions.udfs.scalar.StructuralTestUtil.arrayBlockOf;
 import static com.facebook.presto.metadata.Signature.internalOperator;
@@ -38,7 +36,7 @@ public class JsonArrayExtractFunctionTest {
     public void testVarcharJsonExtract() throws Throwable {
         Block expectArray = arrayBlockOf(VARCHAR, "13", "18", "12");
         Slice inputJson = Slices.utf8Slice("[{\"a\":{\"b\":13}}, {\"a\":{\"b\":18}}, {\"a\":{\"b\":12}}]");
-        Block resultArray = JsonArrayExtractFunction.jsonArrayExtract(inputJson, new JsonPath("$.a.b"));
+        Block resultArray = JsonArrayExtractFunction.jsonArrayExtract(inputJson, Slices.utf8Slice("$.a.b"));
 
         TypeRegistry typeManager = new TypeRegistry();
         FunctionRegistry functionRegistry = new FunctionRegistry(typeManager, new BlockEncodingManager(typeManager), new FeaturesConfig());

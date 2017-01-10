@@ -9,6 +9,7 @@ public enum DayType {
     HOLIDAY("holiday"), WORKDAY("workday");
 
     private String code;
+
     private DayType(String code) {
         this.code = code;
     }

@@ -30,6 +30,7 @@ mvn clean package -DskipTests
 | `0.2.0` | 支持`presto-0.147`~`presto-0.149`|
 | `0.3.0` | 支持`presto-0.150`~`presto-0.151`|
 | `0.4.0` | 支持`presto-0.152`|
+| `0.5.0` | 支持`presto-0.153`~`presto-0.161`|
 
 ## 函数
 ### 1. 字符串相关函数
@@ -55,7 +56,7 @@ mvn clean package -DskipTests
 
 > 我已经发起了一个`array_union`的[PR](https://github.com/prestodb/presto/pull/5644#event-729329053), 现在它已经被合并到presto的master分支中. 因此,如果你的presto版本 > 0.151,它已经包含了`array_union`函数.
 
-`0.3.0`版本以后为了兼容`presto-0.150`版本,也为了防止和`presto-0.151+`命名冲突,将该方法改名为arr_union
+`0.3.0`版本以后为了兼容`presto-0.150`版本,也为了防止和`presto-0.151+`命名冲突,将该方法改名为arr_union. (从 `0.5.0`开始, 我删除了 `arr_union` 函数, 请使用 `array_union`函数代替.)
 
 ### 4. JSON相关函数
 | 函数| 说明|
