@@ -30,7 +30,8 @@ mvn clean package -DskipTests
 | `0.2.0` | 支持`presto-0.147`~`presto-0.149`|
 | `0.3.0` | 支持`presto-0.150`~`presto-0.151`|
 | `0.4.0` | 支持`presto-0.152`|
-| `0.5.0` | 支持`presto-0.153`~`presto-0.161`|
+| `0.5.0` | 支持`presto-0.153`~`presto-0.166`|
+| `0.5.1` | 支持`presto-0.167`~`presto-0.168`|
 
 ## 函数
 ### 1. 字符串相关函数

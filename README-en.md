@@ -30,7 +30,8 @@ You can also directly download file from [release page](https://github.com/aaron
 | `0.2.0` | support `presto-0.147`~`presto-0.149`|
 | `0.3.0` | support `presto-0.150`~`presto-0.151`|
 | `0.4.0` | support `presto-0.152`|
-| `0.5.0` | support `presto-0.153`~`presto-0.161`|
+| `0.5.0` | support `presto-0.153`~`presto-0.166`|
+| `0.5.1` | support `presto-0.167`~`presto-0.168`|
 
 ## functions
 
