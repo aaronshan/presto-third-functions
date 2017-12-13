@@ -1,114 +1,102 @@
-# presto-third-functions [![Build Status](https://travis-ci.org/aaronshan/presto-third-functions.svg?branch=master)](https://travis-ci.org/aaronshan/presto-third-functions)
-[Readme in English](https://github.com/aaronshan/presto-third-functions/tree/master/README-en.md)
+# presto-third-functions 
 
-## 简介
+[![Build Status](https://travis-ci.org/aaronshan/presto-third-functions.svg?branch=master)](https://travis-ci.org/aaronshan/presto-third-functions)
+[![Documentation Status](https://img.shields.io/badge/docs-latest-brightgreen.svg?style=flat)](https://github.com/aaronshan/presto-third-functions/tree/master/README.md)
+[![Documentation Status](https://img.shields.io/badge/中文文档-最新-brightgreen.svg)](https://github.com/aaronshan/presto-third-functions/tree/master/README-zh.md)
+[![Release](https://img.shields.io/github/release/aaronshan/presto-third-functions.svg)](https://github.com/aaronshan/presto-third-functions/releases)
 
-包含了一些presto自定义的函数
 
-## 构建
-### 各软件版本:
-* Java 8 Update 60 及以上
-* Maven 3.3.9+
+## Introduction
 
-### 命令
+some custom presto functions
+
+## Build
+
+### requires
+* Java 8 Update 60 or higher (8u60+)
+* Maven 3.3.9+ (for building)
+
 ```
 cd ${project_home}
 mvn clean package
 ```
 
-如果想要忽略单元测试,请执行:
+If you want skip unit tests, please run:
 ```
 mvn clean package -DskipTests
 ```
-执行完命令后,将会生成在target目录下presto-third-functions-{version}-shaded.jar`文件.
 
-或者也可以直接在[发布页](https://github.com/aaronshan/presto-third-functions/releases)下载.
+It will generate presto-third-functions-{version}-shaded.jar in target directory.
 
-### 版本说明
-| 版本 | 说明 |
+You can also directly download file from [release page](https://github.com/aaronshan/presto-third-functions/releases).
+
+### version description
+| version | description |
 |:--|:--|
-| `0.2.0` | 支持`presto-0.147`~`presto-0.149`|
-| `0.3.0` | 支持`presto-0.150`~`presto-0.151`|
-| `0.4.0` | 支持`presto-0.152`|
-| `0.5.0` | 支持`presto-0.153`~`presto-0.166`|
-| `0.5.1` | 支持`presto-0.167`~`presto-0.168`|
+| `0.2.0` | support `presto-0.147`~`presto-0.149`|
+| `0.3.0` | support `presto-0.150`~`presto-0.151`|
+| `0.4.0` | support `presto-0.152`|
+| `0.5.0` | support `presto-0.153`~`presto-0.166`|
+| `0.5.1` | support `presto-0.167`~`presto-0.168`|
 
-## 函数
-### 1. 字符串相关函数
-| 函数| 说明|
+## functions
+
+### 1. string functions
+| function| description |
 |:--|:--|
-|pinyin(string) -> string | 将汉字转为拼音|
-|md5(string) -> string |对字符串求md5值|
-|sha256(string) -> string |对字符串求sha256值|
+|pinyin(string) -> string | convert chinese to pinyin|
+|md5(string) -> string | md5 hash|
+|sha256(string) -> string |sha256 hash|
 
-### 2. 日期相关函数
-| 函数| 说明|
+### 2. array functions
+| function| description |
 |:--|:--|
-|dayofweek(date_string \| date) -> int |计算给定日期是每周7天内的第几天,其中周一返回1,周天返回7,错误返回-1.|
-|zodiac(date_string \| date) -> string | 将日期转换为星座英文 |
-|zodiac_cn(date_string \| date) -> string | 将日期转换为星座中文 | 
-|typeofdate(date_string \| date) -> string | 获取日期的类型(1: 法定节假日, 2: 正常周末, 3: 正常工作日 4:攒假的工作日),错误返回-1. | 
+|array_union(array, array) -> array |return union result of two array.|
+|value_count(array(T), T value) -> int | count ARRAY's element number that element value equals given value.|
 
-### 3. 数组相关函数
-| 函数| 说明|
+> I had already proposed a [pull request](https://github.com/prestodb/presto/pull/5644#event-729329053) about `array_union`. Currently, it be merged to presto master branch. So, If your presto version > 0.151, it already include array_union function.
+
+To support `presto-0.150+`, from `0.3.0`, it had rename to `arr_union`. (from `0.5.0`, I had delete `arr_union` function, please use `array_union`.)
+
+### 3. date functions
+| function| description |
 |:--|:--|
-|array_union(array, array) -> array |求两个array的并集|
-|value_count(array(T), T value) -> int | 统计在数组中值为给定值的元素个数|
+|dayofweek(date_string \| date) -> int | day of week,if monday,return 1, sunday return 7, error return -1.|
+|zodiac(date_string \| date) -> string | convert date to zodiac|
+|zodiac_cn(date_string \| date) -> string | convert date to zodiac chinese | 
 
-> 我已经发起了一个`array_union`的[PR](https://github.com/prestodb/presto/pull/5644#event-729329053), 现在它已经被合并到presto的master分支中. 因此,如果你的presto版本 > 0.151,它已经包含了`array_union`函数.
-
-`0.3.0`版本以后为了兼容`presto-0.150`版本,也为了防止和`presto-0.151+`命名冲突,将该方法改名为arr_union. (从 `0.5.0`开始, 我删除了 `arr_union` 函数, 请使用 `array_union`函数代替.)
-
-### 4. JSON相关函数
-| 函数| 说明|
+### 4. JSON functions
+| function| description |
 |:--|:--|
-|json_array_extract(json, jsonPath) -> array(varchar) |提取json数组中对应路径的值|
-|json_array_extract_scalar(json, jsonPath) -> array(varchar) |和`json_array_extract`类似,但是返回结果是string(不是json格式)|
+|json_array_extract(json, jsonPath) -> array(varchar) |extract json array by given jsonPath.|
+|json_array_extract_scalar(json, jsonPath) -> array(varchar) |like `json_array_extract`, but returns the result value as a string (as opposed to being encoded as JSON).|
 
-### 5. MAP相关函数
-| 函数| 说明|
+### 5. MAP functions
+| function| description |
 |:--|:--|
-|value_count(MAP(K,V), V value) -> int | 统计中MAP中值为给定值的元素的个数|
+|value_count(MAP(K,V), V value) -> int | count MAP's element number that element value equals given value.|
 
-### 6. 身份证相关函数
-| 函数| 说明|
+### 6. geographic functions 
+| function| description |
 |:--|:--|
-|id_card_province(string) -> string |由身份证号获取省份|
-|id_card_city(string) -> string |由身份证号获取城市|
-|id_card_area(string) -> string |由身份证号获取区或县|
-|id_card_birthday(string) -> string |由身份证号获取出生日期|
-|id_card_gender(string) -> string |由身份证号获取性别|
-|is_valid_id_card(string) -> boolean |鉴别是否是有效的身份证号|
-|id_card_info(string) -> json |获取身份证号对应的信息,包括省份,城市,区县,性别及是否有效|
+|wgs_distance(double lat1, double lng1, double lat2, double lng2) -> double | calculate WGS84 coordinate distance, in meters|
 
-### 7. 坐标相关函数
-| 函数| 说明|
+### 7. other functions
+| function| description |
 |:--|:--|
-|wgs_distance(double lat1, double lng1, double lat2, double lng2) -> double |计算WGS84坐标系下的坐标距离,单位为米|
-|gcj_to_bd(double,double) -> json |火星坐标系(GCJ-02)转百度坐标系(BD-09),谷歌、高德——>百度|
-|bd_to_gcj(double,double) -> json |百度坐标系(BD-09)转火星坐标系(GCJ-02),百度——>谷歌、高德|
-|wgs_to_gcj(double,double) -> json |WGS84转GCJ02(火星坐标系)|
-|gcj_to_wgs(double,double) -> json |GCJ02(火星坐标系)转GPS84,输出的WGS-84坐标精度为1米到2米之间。|
-|gcj_extract_wgs(double,double) -> json |GCJ02(火星坐标系)转GPS84,输出的WGS-84坐标精度为0.5米内。但是计算速度慢于gcj_to_wgs|
+|is_null(all_type) -> boolean |whether is null or not|
 
-> 关于互联网地图坐标系的说明见: [当前互联网地图的坐标系现状](https://github.com/aaronshan/presto-third-functions/tree/master/src/main/java/cc/shanruifeng/functions/udfs/scalar/geographic/README-geo.md)
+## Use
 
-### 8. 其他函数
-| 函数| 说明|
-|:--|:--|
-|is_null(all_type) -> boolean |是否是null|
-
-## 用法
-
-把presto-third-functions-{version}-shaded.jar放到 `${presto_home}/plugin/hive-hadoop2` 目录下并重启presto.下面是示例:
-### 1. 重启presto
+put presto-third-functions-{version}-shaded.jar into `${presto_home}/plugin/hive-hadoop2` and restart presto server. for example:
+### 1. restart presto
 ```
 mv presto-third-functions-{version}-shaded.jar /home/presto/presto-server-0.147/plugin/hive-hadoop2/
 cd /home/presto/presto-server-0.147
 bin/launcher restart
 ```
 
-### 2. 设置presto命令
+### 2. set presto command
 ```
 cd /home/presto/
 ln -s presto-client-0.147/presto-cli-0.147-executable.jar presto-cli
@@ -117,8 +105,8 @@ export PATH=/home/java8/jdk1.8.0_91/bin/:$PATH;
 alias presto="/home/presto/presto-cli --server localhost:8080 --catalog hive --schema default"
 ```
 
-### 3. 示例
-#### 3.1 字符串相关函数
+### 3. example
+#### 3.1 string functions
 ```
 presto:default> select pinyin(country) from (values '中国') as t(country);
   _col0
@@ -131,7 +119,6 @@ Splits: 1 total, 0 done (0.00%)
 0:00 [0 rows, 0B] [0 rows/s, 0B/s]
 ```
 
-
 ```
 presto:default> select md5(col1), sha256(col1) from (values 'aaronshan') as t(col1)\G;
 -[ RECORD 1 ]-----------------------------------------------------------
@@ -143,21 +130,7 @@ Splits: 1 total, 0 done (0.00%)
 0:00 [0 rows, 0B] [0 rows/s, 0B/s]
 ```
 
-#### 3.2 日期相关函数
-```
-presto
-presto:default> select dayofweek(my_day) from (values '2016-07-07') as t(my_day);
- _col0
--------
-     4
-(1 row)
-
-Query 20160707_073523_00005_iya2r, FINISHED, 1 node
-Splits: 1 total, 0 done (0.00%)
-0:00 [0 rows, 0B] [0 rows/s, 0B/s]
-```
-
-#### 3.3 数组相关函数
+#### 3.2 array functions
 ```
 presto:default> select array_union(arr1, arr2) from (values (ARRAY [1,3,5,null], ARRAY [2,3,4,null])) as t(arr1, arr2);
          _col0
@@ -182,7 +155,21 @@ Splits: 1 total, 0 done (0.00%)
 0:00 [0 rows, 0B] [0 rows/s, 0B/s]
 ```
 
-#### 3.4 JSON相关函数
+#### 3.3 date functions
+```
+presto
+presto:default> select dayofweek(my_day) from (values '2016-07-07') as t(my_day);
+ _col0
+-------
+     4
+(1 row)
+
+Query 20160707_073523_00005_iya2r, FINISHED, 1 node
+Splits: 1 total, 0 done (0.00%)
+0:00 [0 rows, 0B] [0 rows/s, 0B/s]
+```
+
+#### 3.4 JSON functions
 ```
 presto:default> select json_array_extract(arr1, '$.book.id') from (values ('[{"book":{"id":"12"}}, {"book":{"id":"14"}}]')) t(arr1);
     _col0
@@ -208,7 +195,7 @@ Splits: 1 total, 0 done (0.00%)
 0:00 [0 rows, 0B] [0 rows/s, 0B/s]
 ```
 
-#### 3.6 MAP相关函数
+#### 3.5 MAP functions
 ```
 presto:default> select map1, value_count(map1, 'a') from (values (map(ARRAY[1,2,3], ARRAY['a', 'b', 'a']))) t(map1);
       map1       | _col1
@@ -221,35 +208,7 @@ Splits: 1 total, 0 done (0.00%)
 0:00 [0 rows, 0B] [0 rows/s, 0B/s]
 ```
 
-#### 3.5 身份证相关函数
-```
-presto:default> select id_card_info(card) from (values '110101198901084517') as t(card);
-                                      _col0
-----------------------------------------------------------------------------------
- {"area":"东城区","valid":true,"province":"北京市","gender":"男","city":"北京市"}
-(1 row)
-
-Query 20160712_071700_00004_hkbes, FINISHED, 1 node
-Splits: 1 total, 0 done (0.00%)
-0:00 [0 rows, 0B] [0 rows/s, 0B/s]
-```
-
-#### 3.6 坐标相关函数
-```
-presto:default> select gcj_to_bd(lat,lng), bd_to_gcj(lat,lng), wgs_to_gcj(lat,lng), gcj_to_wgs(lat,lng), gcj_extract_wgs(lat,lng) from (values (39.915, 116.404)) as t(lat, lng)\G;
--[ RECORD 1 ]----------------------------------------------
-_col0 | {"lng":116.41036949371029,"lat":39.92133699351022}
-_col1 | {"lng":116.39762729119315,"lat":39.90865673957631}
-_col2 | {"lng":116.41024449916938,"lat":39.91640428150164}
-_col3 | {"lng":116.39775550083061,"lat":39.91359571849836}
-_col4 | {"lng":116.39775549316407,"lat":39.913596801757805}
-
-Query 20160712_024714_00003_9rund, FINISHED, 1 node
-Splits: 1 total, 0 done (0.00%)
-0:00 [0 rows, 0B] [0 rows/s, 0B/s]
-```
-
-#### 3.7 其他函数
+#### 3.6 other functions
 ```
 presto:default> select is_null(col0),is_null(col1),is_null(col2),is_null(col3) from (values ('test', 1, 0.5, ARRAY [1]),(null, null, null, null)) as t(col0, col1, col2,col3);
  _col0 | _col1 | _col2 | _col3
