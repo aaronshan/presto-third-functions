@@ -79,9 +79,27 @@ To support `presto-0.150+`, from `0.3.0`, it had rename to `arr_union`. (from `0
 ### 6. geographic functions 
 | function| description |
 |:--|:--|
-|wgs_distance(double lat1, double lng1, double lat2, double lng2) -> double | calculate WGS84 coordinate distance, in meters|
+|wgs_distance(double lat1, double lng1, double lat2, double lng2) -> double | calculate WGS84 coordinate distance, in meters. |
+|gcj_to_bd(double,double) -> json | GCJ-02(火星坐标系) convert to BD-09(百度坐标系), 谷歌、高德——>百度|
+|bd_to_gcj(double,double) -> json | BD-09(百度坐标系) convert to GCJ-02(火星坐标系), 百度——>谷歌、高德|
+|wgs_to_gcj(double,double) -> json | WGS84(地球坐标系) convert to GCJ02(火星坐标系)|
+|gcj_to_wgs(double,double) -> json | GCJ02(火星坐标系) convert to GPS84(地球坐标系), output coordinate WGS-84 accuracy within 1 to 2 meters.|
+|gcj_extract_wgs(double,double) -> json | GCJ02(火星坐标系) convert to GPS84, output coordinate WGS-84 accuracy within 0.5 meters. but compute cost more time than `gcj_to_wgs`. |
 
-### 7. other functions
+> 关于互联网地图坐标系的说明见: [当前互联网地图的坐标系现状](https://github.com/aaronshan/presto-third-functions/tree/master/src/main/java/cc/shanruifeng/functions/udfs/scalar/geographic/README-geo.md)
+
+### 7. china id card functions
+| function| description |
+|:--|:--|
+|id_card_province(string) -> string |get user's province|
+|id_card_city(string) -> string |get user's city|
+|id_card_area(string) -> string |get user's area|
+|id_card_birthday(string) -> string |get user's birthday|
+|id_card_gender(string) -> string |get user's gender|
+|is_valid_id_card(string) -> boolean |determine is valid china id card No.|
+|id_card_info(string) -> json |get china id card info. include province, city, area etc.|
+
+### 8. other functions
 | function| description |
 |:--|:--|
 |is_null(all_type) -> boolean |whether is null or not|
@@ -208,7 +226,35 @@ Splits: 1 total, 0 done (0.00%)
 0:00 [0 rows, 0B] [0 rows/s, 0B/s]
 ```
 
-#### 3.6 other functions
+#### 3.6 china id card functions
+```
+presto:default> select id_card_info(card) from (values '110101198901084517') as t(card);
+                                      _col0
+----------------------------------------------------------------------------------
+ {"area":"东城区","valid":true,"province":"北京市","gender":"男","city":"北京市"}
+(1 row)
+
+Query 20160712_071700_00004_hkbes, FINISHED, 1 node
+Splits: 1 total, 0 done (0.00%)
+0:00 [0 rows, 0B] [0 rows/s, 0B/s]
+```
+
+#### 3.7 geographic functions
+```
+presto:default> select gcj_to_bd(lat,lng), bd_to_gcj(lat,lng), wgs_to_gcj(lat,lng), gcj_to_wgs(lat,lng), gcj_extract_wgs(lat,lng) from (values (39.915, 116.404)) as t(lat, lng)\G;
+-[ RECORD 1 ]----------------------------------------------
+_col0 | {"lng":116.41036949371029,"lat":39.92133699351022}
+_col1 | {"lng":116.39762729119315,"lat":39.90865673957631}
+_col2 | {"lng":116.41024449916938,"lat":39.91640428150164}
+_col3 | {"lng":116.39775550083061,"lat":39.91359571849836}
+_col4 | {"lng":116.39775549316407,"lat":39.913596801757805}
+
+Query 20160712_024714_00003_9rund, FINISHED, 1 node
+Splits: 1 total, 0 done (0.00%)
+0:00 [0 rows, 0B] [0 rows/s, 0B/s]
+```
+
+#### 3.8 other functions
 ```
 presto:default> select is_null(col0),is_null(col1),is_null(col2),is_null(col3) from (values ('test', 1, 0.5, ARRAY [1]),(null, null, null, null)) as t(col0, col1, col2,col3);
  _col0 | _col1 | _col2 | _col3

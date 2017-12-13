@@ -166,7 +166,7 @@ Splits: 1 total, 0 done (0.00%)
 ```
 presto:default> select array_union(arr1, arr2) from (values (ARRAY [1,3,5,null], ARRAY [2,3,4,null])) as t(arr1, arr2);
          _col0
------------------------
+-----------------------****
  [1, 3, 5, null, 2, 4]
 (1 row)
 
@@ -213,7 +213,7 @@ Splits: 1 total, 0 done (0.00%)
 0:00 [0 rows, 0B] [0 rows/s, 0B/s]
 ```
 
-#### 3.6 MAP相关函数
+#### 3.5 MAP相关函数
 ```
 presto:default> select map1, value_count(map1, 'a') from (values (map(ARRAY[1,2,3], ARRAY['a', 'b', 'a']))) t(map1);
       map1       | _col1
@@ -226,7 +226,7 @@ Splits: 1 total, 0 done (0.00%)
 0:00 [0 rows, 0B] [0 rows/s, 0B/s]
 ```
 
-#### 3.5 身份证相关函数
+#### 3.6 身份证相关函数
 ```
 presto:default> select id_card_info(card) from (values '110101198901084517') as t(card);
                                       _col0
@@ -239,7 +239,7 @@ Splits: 1 total, 0 done (0.00%)
 0:00 [0 rows, 0B] [0 rows/s, 0B/s]
 ```
 
-#### 3.6 坐标相关函数
+#### 3.7 坐标相关函数
 ```
 presto:default> select gcj_to_bd(lat,lng), bd_to_gcj(lat,lng), wgs_to_gcj(lat,lng), gcj_to_wgs(lat,lng), gcj_extract_wgs(lat,lng) from (values (39.915, 116.404)) as t(lat, lng)\G;
 -[ RECORD 1 ]----------------------------------------------
@@ -254,7 +254,7 @@ Splits: 1 total, 0 done (0.00%)
 0:00 [0 rows, 0B] [0 rows/s, 0B/s]
 ```
 
-#### 3.7 其他函数
+#### 3.8 其他函数
 ```
 presto:default> select is_null(col0),is_null(col1),is_null(col2),is_null(col3) from (values ('test', 1, 0.5, ARRAY [1]),(null, null, null, null)) as t(col0, col1, col2,col3);
  _col0 | _col1 | _col2 | _col3
